@@ -1,19 +1,9 @@
-.model tiny
-.code
-.186
-org 100h
-
 PrevBp equ 0FFFFh ; Constant for testing recovering old bp from stack 
 
-start:	jmp ParamBlock_end
-	
-	msg 			db 	'CHECKING$$$PROGRAM', 0
-	FormatString 	db 'print test: char is %c, string is %s, oct is %o, dec is %d, hex is %x and bin is %b ', 0
-	
-	DigitBuffer 	db '0123456789ABCDEF'
-	PrintBuffer 	db 16 dup ('*')
+section .text
+global  MyPrint
 
-	ParamBlock_end:
+start:
 
 	push 	'!'				; value to test if print spoils stack
 	mov  	bp, PrevBp		; pretending that bp is something
@@ -51,7 +41,7 @@ TestPrintCall	proc
 	push 	'&'					;
 	push 	offset FormatString	;
 	
-	jmp 	Print				; calling the print
+	jmp 	MyPrint				; calling the print
 	
 	PrintReturn:
 
@@ -223,7 +213,7 @@ CharOut	proc
 CharOut	endp
 
 
-Print	proc
+MyPrint	proc
 
 	;---------------------------
 	; Works like printf func from C
@@ -277,7 +267,7 @@ Print	proc
 			inc di					;
 			jmp ReadFormat			;
 
-Print	endp
+MyPrint	endp
 
 
 ManageFormat	proc
@@ -326,5 +316,17 @@ ManageFormat	proc
 	EndCheck: 	ret
 
 ManageFormat	endp
+
+
+section .data
+
+	msg 			db 	'CHECKING$$$PROGRAM', 0
+	FormatString 	db 'print test: char is %c, string is %s, oct is %o, dec is %d, hex is %x and bin is %b ', 0
+	
+	DigitBuffer 	db '0123456789ABCDEF'
+
+section .bss
+
+	PrintBuffer resb 16
 
 end start
