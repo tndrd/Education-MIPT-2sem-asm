@@ -19,6 +19,7 @@ void TestPrintfRecursively(int counter){
 int main(){
 
     char testchar = '!';
+    MyPrint("%c\n", testchar);
     TestPrintfRecursively(5);
     return 0;
 }

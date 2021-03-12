@@ -1,4 +1,4 @@
 all:
-	g++ -c CommonCProgram.c -o CCP.o
+	g++ -c MyPrintTest.c -o MyPrintTest.o
 	nasm -f elf64 MyPrint.asm -o MyPrint.o
-	g++ -no-pie -o MyPrint CCP.o MyPrint.o 
+	g++ -no-pie -o MyPrint MyPrintTest.o MyPrint.o 

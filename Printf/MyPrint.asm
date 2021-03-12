@@ -50,11 +50,8 @@ MyPrint:
 		CheckEnd:
 			cmp byte [rcx], 0	 	; if (format[rcx] == 0) return
 			jne CheckFormat		 	;
-			;mov rsp, r15
-			;add rsp, 24
-			;push r14
-			;ret
-			add rsp, 48
+			add rsp, 48				
+			push r14
 			ret
 
 		CheckFormat:
