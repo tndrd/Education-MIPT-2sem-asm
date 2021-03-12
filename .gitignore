@@ -1,3 +1,5 @@
 Printf/MyPrint
 Printf/MyPrint.o
 Printf/MyPrintTest.o
+Printf/StdPrintf.o
+Printf/StdPrintf
