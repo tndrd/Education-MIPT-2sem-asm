@@ -2,8 +2,9 @@
 extern "C" void MyPrint(const char*, ...);
 
 void TestPrintfRecursively(int counter){
+    
     if (counter == 0){
-        MyPrint("Some stuff be like %c, %s, %o, %b, %d, %x\n", '@', "Wee", 100, 100, 100, 100);
+        MyPrint("%s %x %d%%%c%b\n", "I love", 3802, 100, '!', 511);
     }
     else{
         for (int i = counter; i > 0; i--) MyPrint(" "); // could be printf ("%*s", i, "") but I use MyPrint instead to test it
@@ -18,8 +19,6 @@ void TestPrintfRecursively(int counter){
 
 int main(){
 
-    char testchar = '!';
-    MyPrint("%c\n", testchar);
     TestPrintfRecursively(5);
     return 0;
 }

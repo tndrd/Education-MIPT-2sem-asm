@@ -2,9 +2,6 @@ bits 64
 section .text
 	GLOBAL MyPrint 
 
-
-
-
 MyPrint:
 
 	;---------------------------
@@ -31,15 +28,14 @@ MyPrint:
 	;			sp							   bp
 	;-------------------------------------------------------------------------------
 
-	pop r14
-	;mov r15, rsp
-
-    push r9
-    push r8
-    push rcx
-    push rdx
-    push rsi
-    push rdi
+	pop r14		; 
+				;
+    push r9		;
+    push r8		; make System V call look like cdecl
+    push rcx	;
+    push rdx	;
+    push rsi	;
+    push rdi	;
 
 	mov 	rbx, rsp		; rbx = &first param
 	mov 	rcx, [rbx]		; rcx = format_string
@@ -50,9 +46,9 @@ MyPrint:
 		CheckEnd:
 			cmp byte [rcx], 0	 	; if (format[rcx] == 0) return
 			jne CheckFormat		 	;
-			add rsp, 48				
-			push r14
-			ret
+			add rsp, 48				; clear stack	
+			push r14				; restore return adress
+			ret						; return
 
 		CheckFormat:
 			cmp byte [rcx], '%'		; if (format[rcx] == '%')
@@ -60,7 +56,7 @@ MyPrint:
 			inc rcx					; skip '%'
 			call ManageFormat		; print the value according to tag
 			inc rcx					; skip tag char
-			add bx, 8				; move bx to next param
+			add rbx, 8				; move bx to next param
 			jmp ReadFormat			
 
 		PrintChar:					;
@@ -168,8 +164,10 @@ ManageFormat:
 	CheckNumber 'o', OctOut, Check_BinOut
 	CheckNumber 'b', BinOut, EndCheck
 
-	EndCheck: 	ret
-
+	EndCheck: 	mov 	rsi, rcx			; this part provides printing the chars
+				call	CharOut				; after '%' which are not format tags.
+				sub		rbx,8				; !
+				ret							; Should replace with jump-table
 
 
 DecOut:
