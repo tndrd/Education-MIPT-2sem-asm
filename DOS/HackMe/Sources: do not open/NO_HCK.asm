@@ -110,8 +110,8 @@ GetPassword proc
 
         mov     InputBuffer[bx], al
 
-        cmp     bx, MAX_PASSWORD_LENGTH + 1
-        je      ManageMaxLength
+        ;cmp     bx, MAX_PASSWORD_LENGTH + 1
+        ;je      ManageMaxLength
 
         inc     bx
 
@@ -124,11 +124,14 @@ GetPassword proc
 GetPassword endp
 
     
-ManageMaxLength:                        ;
-    mov     si, offset Buf_oflow_Msg    ; stops the input if password is too long
-    call    DisplayMessage              ;
-    call    Retry                       ;
+;ManageMaxLength:                        ;
+;    mov     si, offset Buf_oflow_Msg    ; stops the input if password is too long
+;    call    DisplayMessage              ;
+;    call    Retry                       ;
 
+InBufSalt       db 23
+InputBuffer     db MAX_PASSWORD_LENGTH dup (EMPTY_CIPHER_CHAR), SALT
+CipherBuffer    db MAX_PASSWORD_LENGTH dup (EMPTY_CIPHER_CHAR)
 
 Cipher    proc
 
@@ -199,7 +202,6 @@ CompareWithCipher proc
         call    Exit
 
     PasswordBad:
-        
         mov     si, offset PW_Bad_Msg
         call    DisplayMessage
         call    Retry
@@ -215,9 +217,5 @@ PW_OK_Msg       db "Self-destruct begin successfully. The computer will blow up 
 Buf_oflow_Msg   db 0Ah, "You've entered too much symbols, password should be shorter", 0Ah, "$"
 
 PWordCipher     db 160, 226, 129, 152, "Q &*********", 0ah, "$"
-
-InBufSalt       db 23
-InputBuffer     db MAX_PASSWORD_LENGTH dup (EMPTY_CIPHER_CHAR), SALT
-CipherBuffer    db MAX_PASSWORD_LENGTH dup (EMPTY_CIPHER_CHAR)
 
 end start
