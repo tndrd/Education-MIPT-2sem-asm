@@ -56,7 +56,7 @@ MyPrint:
 			inc rcx					; skip '%'
 			call ManageFormat		; print the value according to tag
 			inc rcx					; skip tag char
-			add rbx, 8				; move bx to next param
+			;add rbx, 8				; move bx to next param
 			jmp ReadFormat			
 
 		PrintChar:					;
@@ -124,50 +124,47 @@ ManageFormat:
 	; spoils (depends on tag):
 	; 	si, dl, ax
 	;---------------------------
+	
+	xor rax, rax
+	mov al, byte [rcx]
+	xor rsi, rsi
+	mov rsi, [FmtTagJumpTable + rax*8]
 
+	call rsi
+	ret
 
-	Check_StringOut:
-		cmp 	byte [rcx], 's'
-		jne		Check_CharOut
+	Do_StringOut:
 		mov 	rsi, [rbx]
 		call 	StringOut
+		add rbx, 8				; move bx to next param
 		ret
 	
-	Check_CharOut:
-		cmp 	byte [rcx], 'c'
-		jne 	Check_DecOut
+	Do_CharOut:
 		mov 	rsi, rbx
 		call 	CharOut
+		add rbx, 8				; move bx to next param
 		ret
 
-	%macro CheckNumber 3 ;TAG, PR_FUNC, NEXT_LABEL
+	%macro CheckNumber 1 ;PR_FUNC
 	
-	Check_%2:
-		cmp		byte [rcx], %1
-		jne		%3
-
+	Do_%1:
 		push 	rbx
 		push	rcx
 		
 		mov 	rax, [rbx]
-		call	%2
+		call	%1
 		
 		pop 	rcx
 		pop		rbx
-		
+		add rbx, 8				; move bx to next param
 		ret
 
 	%endmacro
 
-	CheckNumber 'd', DecOut, Check_HexOut
-	CheckNumber 'x', HexOut, Check_OctOut
-	CheckNumber 'o', OctOut, Check_BinOut
-	CheckNumber 'b', BinOut, EndCheck
-
-	EndCheck: 	mov 	rsi, rcx			; this part provides printing the chars
-				call	CharOut				; after '%' which are not format tags.
-				sub		rbx,8				; !
-				ret							; Should replace with jump-table
+	CheckNumber DecOut
+	CheckNumber HexOut
+	CheckNumber OctOut
+	CheckNumber BinOut
 
 
 DecOut:
@@ -206,6 +203,38 @@ DecOut:
 		call 	FlushOBuffer_rev
 		ret
 
+
+PutToStdout:
+
+    ;---------------
+    ; Does 01h syscall (write) 
+    ; Params:
+    ;   rsi - pointer to buffer
+	;	rdx - buffer size
+    ; Spoils:
+    ;   rax, rdi, rdx, goddamn rcx (!) 
+    ;---------------
+
+	mov 	rax, 1
+    mov 	rdi, 1
+    syscall
+	ret
+
+TagError:
+	mov 	rsi, FmtTagErrMsg
+	mov 	dl, byte [rcx]
+    mov 	FmtTagErrMsg[FmtTagErrMsg_len - 3], dl
+	mov		dx, FmtTagErrMsg_len
+	call 	PutToStdout
+	add rbx, 8				; move bx to next param
+	ret
+	
+PercentOut:
+	mov		rsi, "%"
+	mov 	OutputBuffer[0], rsi
+	mov 	rsi, OutputBuffer
+	call 	CharOut
+	ret
 
 
 CharOut:
@@ -278,9 +307,27 @@ FlushOBuffer_rev:
 section .data
 	
 	msg 			db 	'CHECKING$$$PROGRAM', 0
-	FormatString 	db 'print test: char is %c, string is %s, oct is %o, dec is %d, hex is %x and bin is %b ', 0
+	FormatString 	db 'print test: char is %c, string is %s, oct is %o, dec is %d, hex is %g and bin is %b ', 0
 
     OutputBuffer    db 64 dup "*"
     DigitBuffer     db '0123456789ABCDEF'
+
+	FmtTagErrMsg	 db "Unknown format tag: a", 0ah, 0
+	FmtTagErrMsg_len equ $ - FmtTagErrMsg
+
+
+    FmtTagJumpTable     times ('%')             dq TagError
+                                                dq PercentOut
+                        times ('a' - '%')       dq TagError                    
+                                                dq Do_BinOut
+                                                dq Do_CharOut
+                                                dq Do_DecOut
+                        times ('n' - 'd')       dq TagError
+                                                dq Do_OctOut
+                        times ('r' - 'o')       dq TagError
+                                                dq Do_StringOut
+                        times ('w' - 's')       dq TagError
+												dq Do_HexOut   
+						times (255 - 'h')		dq TagError
 
 section .bss
