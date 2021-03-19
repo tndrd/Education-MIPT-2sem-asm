@@ -2,6 +2,28 @@
 #include "stdio.h" 
 #include "assert.h"
 
+void SavePassword(const char* name, char* password);
+void StartMenu(int* buf_addr, int* dst_addr, int* value);
+char* GeneratePassword(int buf_addr, int dst_addr, int value);
+char* GenerateValueBytes(int value);
+
+
+int main(){
+    
+    int buf_addr = 0;
+    int dst_addr = 0;
+    int value    = 0;
+
+    StartMenu(&buf_addr, &dst_addr, &value);
+    char* new_password = GeneratePassword(buf_addr, dst_addr, value);
+    SavePassword("egor_loh.txt", new_password);
+    
+    free(new_password);
+    return 0;
+
+}
+
+
 char* GenerateValueBytes(int value){
 
     char* value_bytes = (char*)calloc(3, sizeof(char));
@@ -17,19 +39,23 @@ char* GenerateValueBytes(int value){
     return value_bytes;
 }
 
+
 char* GeneratePassword(int buf_addr, int dst_addr, int value){
     
-    char* new_password  = (char*)calloc(dst_addr - buf_addr + 2, sizeof(char));
+    char* new_password  = (char*)calloc(dst_addr - buf_addr + 4, sizeof(char));
     char* value_bytes   = GenerateValueBytes(value);
     
     assert(new_password);
     assert(value_bytes);
-
-    sprintf(new_password, "%*s", dst_addr - buf_addr+2, value_bytes);
     
+    int i = 0;
+    for (; i < dst_addr - buf_addr; i++) new_password[i] = '$';
+    sprintf(new_password + i, "%c%c\r\0", value_bytes[0], value_bytes[1]);
+    printf("value bytes: %X %X\n", value_bytes[0], value_bytes[1]);
     free(value_bytes);
     return new_password;   
 }
+
 
 void StartMenu(int* buf_addr, int* dst_addr, int* value){
     
@@ -37,7 +63,7 @@ void StartMenu(int* buf_addr, int* dst_addr, int* value){
     assert(dst_addr);
     assert(value);
 
-    printf("This is Password Generator for Egor \"Spaghetti\" Dolgovorodov's program!\n");
+    printf("This is Password Generator for Egor \"Spaghetti\" Dolgodvrodov's program!\n");
     
     printf("Type buffer adress: ");
     scanf("%X", buf_addr);
@@ -50,6 +76,7 @@ void StartMenu(int* buf_addr, int* dst_addr, int* value){
     
 }
 
+
 void SavePassword(const char* name, char* password){
     
     assert(password);
@@ -61,19 +88,4 @@ void SavePassword(const char* name, char* password){
     fprintf(fp, "%s", password);
     printf("Password successfully saved to %s!\n", name);
     fclose(fp);
-}
-
-int main(){
-    
-    int buf_addr = 0;
-    int dst_addr = 0;
-    int value    = 0;
-
-    StartMenu(&buf_addr, &dst_addr, &value);
-    char* new_password = GeneratePassword(buf_addr, dst_addr, value);
-    SavePassword("egor_loh.txt", new_password);
-    
-    free(new_password);
-    return 0;
-
 }

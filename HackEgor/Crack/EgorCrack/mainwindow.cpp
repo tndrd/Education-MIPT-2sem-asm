@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    //system("mpg123 /home/tndnrd/Projects/Education-MIPT-2sem-asm/HackEgor/Crack/EgorCrack/Assets/Барбарики.mp3 &");
+    system("mpg123 /home/tndnrd/Projects/Education-MIPT-2sem-asm/HackEgor/Crack/EgorCrack/Assets/Барбарики.mp3 &");
     ui->setupUi(this);
     ui->saveButton->setEnabled(false);
 

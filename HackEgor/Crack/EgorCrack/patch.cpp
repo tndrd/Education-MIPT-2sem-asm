@@ -2,26 +2,31 @@
 
 unsigned long int HashSum(MyString* code);
 
-const unsigned int      JMP_OP_ADDR   = 0x24;
-const unsigned char     NEW_JMP_OFF   = 0x7E;
-const long unsigned int COM_FILE_SIZE = 333;
-const long unsigned int COM_FILE_HASH = 0x60F8EC6828EC9E8E;
-const unsigned char     HASH_SEED     = 3;
-const unsigned char     HASH_MLTR     = 5;
-const unsigned char     HASH_SALT     = 2;
+const unsigned int      NOP_START_ADDR = 0xF;
+const unsigned char     NOP_QUANTITY   = 3;
+const unsigned char     NOP_OPCODE     = 0x90;
+const long unsigned int COM_FILE_SIZE  = 0x14F;
+const long unsigned int COM_FILE_HASH  = 0x630B9F652226C859;
+const unsigned char     HASH_SEED      = 3;
+const unsigned char     HASH_MLTR      = 5;
+const unsigned char     HASH_SALT      = 2;
 
 PATCH_RESULTS DoPatch(MyString* code)
 {
     assert(code);
     assert(code -> buffer);
 
+    long unsigned int codeHash = HashSum(code);
+
+    printf("Trying to patch file:\n  hash: %lX\n  length: %lX\n", codeHash, code->length);
     if (code -> length != COM_FILE_SIZE)
         return PATCH_WRONG_FILESIZE;
-    if (HashSum(code)  != COM_FILE_HASH)
+    if (codeHash  != COM_FILE_HASH)
         return PATCH_WRONG_HASH;
 
     // Patching
-    (code -> buffer)[JMP_OP_ADDR + 1] = NEW_JMP_OFF;
+    for (int n_byte = 0; n_byte < NOP_QUANTITY; n_byte++)
+        (code -> buffer)[NOP_START_ADDR + n_byte] = NOP_OPCODE;
 
     return PATCH_OK;
 }
