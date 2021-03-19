@@ -1,5 +1,5 @@
 # Second semester programming tasks in MIPT.
-- **DOS/Ramka:**: simple DOS graphical program.
+- **DOS/Ramka:** simple DOS graphical program.
 - **DOS/Ramka/Registers:** resident program that uses 09h DOS interrupt and shows registers values on screen when "\" is pressed.
 - **DOS/HackMe:** app that asks password. Hack it if you can!
 - **Printf:** cdecl-style printf-like assembly function, that may be called from c/c++.
