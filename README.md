@@ -3,4 +3,5 @@
 - **DOS/Ramka/Registers:** resident program that uses 09h DOS interrupt and shows registers values on screen when button is pressed.
 - **DOS/HackMe:** app that asks password. Hack it if you can!
 - **Printf:** systemV printf-like assembly function, that may be called from c/c++.
-- **HackEgor:** Remember "HackMe"? This is a password generator and GUI crack for breaking through [similar program](https://github.com/Krym4s/passhack)
+- **HackEgor:** remember "HackMe"? This is a password generator and GUI crack-program for breaking through [similar program](https://github.com/Krym4s/passhack).
+- **HashTable:** hash-table implementation and its following optimization. See more in article.
