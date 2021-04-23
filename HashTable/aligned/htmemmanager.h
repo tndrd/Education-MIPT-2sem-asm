@@ -1,3 +1,6 @@
+#ifndef __HT_MEM_MANAGER__
+#define __HT_MEM_MANAGER__
+
 #include "stdlib.h"
 #include "stdio.h"
 #include "list.h"
@@ -27,8 +30,6 @@ struct Stack
     void resizeUp();
     void resizeDown();
 
-    //void _prohibit_resize() { throw std::runtime_error("Attempt to resize non-resizeable stack"); }
-
 };
 
 class HashTableMemoryManager
@@ -48,3 +49,5 @@ class HashTableMemoryManager
     ListElement* getNewElement();
 
 };
+
+#endif

@@ -21,39 +21,40 @@
 //template<typename Type>
 struct HashTable
 {
-    size_t         n_elements = 0;
-    size_t         capacity   = 0;
-    size_t         size       = 0;
-    
-    //ListElement*   data_buffer       = nullptr;
-    
+    private:
+    size_t         n_elements  = 0;
+    size_t         size        = 0;
+
+    HashTableList* list_buffer = nullptr;
+
     HashTableMemoryManager mem_manager;
 
-    HashTableList* list_buffer       = nullptr;
-    hash_t  (*hashfunc)(const char*, size_t) = nullptr;
-
-    HashTable(size_t list_buffer_size, hash_t  (*hashfunc)(const char*, size_t));
+    hash_t  (*hashfunc)(const __m128i*, size_t) = nullptr;
 
     HashTable (const HashTable& that)            = delete;
     HashTable& operator= (const HashTable& that) = delete;
 
+    HashTableList* getList(const __m128i* key, size_t n_blocks);
+
+    public:
+
+    HashTable(size_t list_buffer_size, hash_t  (*hashfunc)(const __m128i*, size_t));
     ~HashTable();
 
-    int addElement(const char* key, size_t n_blocks, Type value);
+    int addElement(const __m128i* key, size_t n_blocks, Type value);
 
-    void dump(bool is_quite = true);
+    size_t validate();
+    void dump(bool is_quiet = true);
 
-    ListElement* getElement(const char* key, size_t n_blocks);
-    ListElement* getElementInList(hash_t list_index, const char* key);
-    void NextListElement(ListElement** current_element);
-    Type getValue(const char* key, size_t n_blocks);
+    size_t getQuantity();
 
-    void setValue(const char* key, size_t n_blocks, Type value);
+    ListElement* getElement(const __m128i* key, size_t n_blocks);
+    Type getValue(const __m128i* key, size_t n_blocks);
 
-    const char*    saveCSV(const char* filename);
-    size_t         readCSV(char* buffer);
+    void setValue(const __m128i* key, size_t n_blocks, Type value);
+
+    const char*    saveDistribution_CSV(const char* filename);
     size_t         readACSV(char* keys, char* values);
-    HashTableList* getList(const char* key, size_t n_blocks);
 
 };
 

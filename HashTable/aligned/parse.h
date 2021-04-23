@@ -12,12 +12,12 @@
 #include "string.h"
 #include "../../../Education-MIPT/Onegin/onegin.h"
 #include "config.h"
-#include "list.h"
+#include "x86intrin.h"
 
 struct Word
 {
-    char*  buff     = nullptr;
-    size_t n_blocks = 0;
+    const __m128i*  buff     = nullptr;
+    size_t       n_blocks = 0;
 };
 
 struct WordList
