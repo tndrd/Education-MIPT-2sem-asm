@@ -6,7 +6,6 @@
 #include "assert.h"
 #include "math.h"
 #include "assert.h"
-#include "coloring.h"
 #include <exception>
 #include <iostream>
 #include "string.h"

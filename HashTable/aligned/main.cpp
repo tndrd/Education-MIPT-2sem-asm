@@ -16,10 +16,12 @@ int main()
 {
     HashTable table (131137, opt3_crc32);
 
-    char* keys   = ReadFile_aligned("Datasets/ded-dict/ded-dict.keys", 16);
-    char* values = ReadFile_aligned("Datasets/ded-dict/ded-dict.values", 16);
+    char* keys   = ReadFile_aligned("../Datasets/Acsv/ded-dict.keys", 16);
+    char* values = ReadFile_aligned("../Datasets/Acsv/ded-dict.values", 16);
+    
+    table.readACSV(keys, values);
 
-    char* dict400k = ReadFile_aligned("Datasets/400k-words/400k-words.keys", 16);
+    char* dict400k = ReadFile_aligned("../Datasets/Acsv/400k-words.keys", 16);
     WordList words = parseKeys_ACSV(dict400k);
 
     int n_read = 0;

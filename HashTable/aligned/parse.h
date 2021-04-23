@@ -6,13 +6,11 @@
 #include "assert.h"
 #include "math.h"
 #include "assert.h"
-#include "coloring.h"
 #include <exception>
 #include <iostream>
 #include "string.h"
 #include "../../../Education-MIPT/Onegin/onegin.h"
 #include "config.h"
-#include "x86intrin.h"
 
 struct Word
 {

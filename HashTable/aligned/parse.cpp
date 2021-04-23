@@ -29,7 +29,6 @@ size_t countKeys_ACSV(char* keys)
 
     for (; *current_key; current_key += *(current_key-1) * 16) n_key++;
 
-    printf("%d\n", n_key);
     return n_key;
 }
 

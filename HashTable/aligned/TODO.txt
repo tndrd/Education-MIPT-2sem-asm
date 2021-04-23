@@ -1,5 +1,0 @@
-rename word
-make Word template
-make ListElement inherit Word
-optional:
-    add static field to word which will contain word value parsing func   

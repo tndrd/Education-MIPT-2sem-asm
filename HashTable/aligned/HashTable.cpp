@@ -123,9 +123,10 @@ size_t HashTable::readACSV(char* keys, char* values)
 
     size_t words_read = 0;
 
-    char* prev_key = keys;
+    char*  prev_key        = keys;
     size_t prev_block_size = 0;
-    char* prev_value = values;
+    char*  prev_value      = values;
+
     for (unsigned char block_size = *(current_key - 1); *current_key; current_key += 16 * block_size, block_size = *(current_key - 1))
     {
 
