@@ -120,10 +120,12 @@ int SIMD_strcmp(const char* a, size_t la, const char* b, size_t lb)
         __m128i first  = _mm_load_si128((const __m128i*) a);
         __m128i second = _mm_load_si128((const __m128i*) b);
         
+        res &= _mm_movemask_epi8(_mm_cmpeq_epi8(first, second));
+
+        if (res != 0xFFFF) return 1;
+
         a += 16;
         b += 16;
-
-        res &= _mm_movemask_epi8(_mm_cmpeq_epi8(first, second));
     }
     
     return res != 0xFFFF;
