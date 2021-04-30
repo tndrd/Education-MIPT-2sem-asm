@@ -1,14 +1,16 @@
+ALIGNMENT = 16
+
 def utf8len(s):
     return len(s.encode("utf-8"))
 
 def align_str(string):
     length   = utf8len(string)
-    n_blocks = length // 16 + 1
+    n_blocks = length // ALIGNMENT + 1
 
-    dop = 16 - (length + 1) % 16
+    dop = ALIGNMENT - (length + 1) % ALIGNMENT
 
     aligned =  str(chr(n_blocks)) + string
-    aligned += str(chr(0)) * (dop * ((length %16) != 15))
+    aligned += str(chr(0)) * (dop * ((length % ALIGNMENT) != (ALIGNMENT - 1)))
 
     return aligned
 
@@ -27,7 +29,7 @@ with open("Raw/400k-words.txt", "r") as txt:
 
     index = 0
 
-    keys.write(str(chr(0)) * 15)
+    keys.write(str(chr(0)) * (ALIGNMENT - 1))
 
     for pair in pairs:
         keys.write(align_str(pair[0].rstrip('\n')))
