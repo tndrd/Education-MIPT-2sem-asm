@@ -1,5 +1,5 @@
 O2:
-	g++ main.cpp -O2 -g -DNDEBUG ../../../Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp hashfuncs.cpp HashTableMemoryManager.cpp HashTable.cpp List.cpp hashfuncs.cpp HashTableMemoryManager.cpp parse.cpp -msse4 -o run
+	g++ main.cpp -O2 -g -DNDEBUG ../../../Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp hashfuncs.cpp HashTableMemoryManager.cpp parse.cpp -msse4 -o run
 pg:
 	g++ -pg main.cpp -g -O2 -DNDEBUG /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp hashfuncs.cpp HashTableMemoryManager.cpp parse.cpp -msse4 -o run
 	cat test.txt | ./run > /dev/null

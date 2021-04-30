@@ -29,7 +29,7 @@ int main()
         n_read = countWords(words, table);
     printf("%d\n", n_read);
     
-    table.saveDistribution_CSV("Crc32_13137.csv");
+    //table.saveDistribution_CSV("Crc32_13137.csv");
 
     free(ded_dict);
     free(dict400k);
