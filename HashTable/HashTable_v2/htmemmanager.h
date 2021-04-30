@@ -1,3 +1,6 @@
+#ifndef __HT_MEM_MANAGER__
+#define __HT_MEM_MANAGER__
+
 #include "stdlib.h"
 #include "stdio.h"
 #include "list.h"
@@ -48,3 +51,5 @@ class HashTableMemoryManager
     ListElement* getNewElement();
 
 };
+
+#endif
