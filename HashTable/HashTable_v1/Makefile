@@ -9,7 +9,7 @@ O0:
 	g++ main.cpp -O0 /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp parse.cpp hashfuncs.cpp -o run
 
 csv:
-	g++ csv_gen.cpp -O2 /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp parse.cpp hashfuncs.cpp HashTableMemoryManager.cpp -o csv
+	g++ csv_gen.cpp -O2 /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp parse.cpp hashfuncs.cpp -o csv
 perf:
 	rm -f callgrind.out.*
 	valgrind --tool=callgrind ./run

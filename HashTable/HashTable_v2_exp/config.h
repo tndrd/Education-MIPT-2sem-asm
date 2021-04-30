@@ -3,6 +3,8 @@
 
 typedef char* Type;
 typedef u_int64_t hash_t;
+const size_t LOCAL_LIST_CAPACITY = 2;
+
 
 #include "list.h"
 
@@ -13,5 +15,4 @@ const char CSV_SEPARATOR = '=';
 const char CSV_NEWLINE   = '\n';
 
 const size_t HT_MEM_STACK_INITIAL_CAPACITY = 3;
-
 #endif

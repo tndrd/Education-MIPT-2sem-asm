@@ -12,14 +12,18 @@
 
 static char* Neutral();
 
-struct ListElement
+struct Pair
+{
+    const char* key_ = nullptr;
+    Type        value_;
+};
+
+struct ListElement: public Pair
 {
     ListElement* next_ = 0;
     ListElement* prev_ = 0;
-    const char*  key_ = nullptr;
-    Type value_;
 
-    ListElement(const char* key = nullptr, Type value = Neutral(), ListElement* next = nullptr, ListElement* prev = nullptr);
+    ListElement(const char* key = "", Type value = Neutral(), ListElement* next = nullptr, ListElement* prev = nullptr);
     ListElement(const ListElement& that)              = delete;
     //ListElement& operator= (const ListElement& that)  = delete;
 
@@ -28,12 +32,13 @@ struct ListElement
 
 struct HashTableList
 {   
+    const static size_t local_capacity = LOCAL_LIST_CAPACITY;
     ListElement* tail = 0;
     size_t size = 0;
     ListElement* head = 0;
     volatile size_t test = 0;
 
-    ListElement tail_el;
+    ListElement local_container[LOCAL_LIST_CAPACITY] = {};
 
     public:
 
@@ -49,6 +54,7 @@ struct HashTableList
     //HashTableList& operator= (const HashTableList& that) = delete;
 
     LIST_CODES append(ListElement* new_element);
+    LIST_CODES addLocalElement(const char* key, Type value);
     int print(bool quiet = true);
     const char* getCodename(LIST_CODES code);
     LIST_CODES validate();

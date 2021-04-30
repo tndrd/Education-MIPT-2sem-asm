@@ -3,10 +3,12 @@
 static char* Neutral() { return 0; }
 
 ListElement::ListElement(const char* key, Type value, ListElement* next, ListElement* prev):
-    value_(value),
-    key_(key),
     next_(next),
-    prev_(prev) {}
+    prev_(prev)
+    {
+        value_ = value;
+        key_   = key;
+    }
 
 
 void ListElement::print()
@@ -18,7 +20,7 @@ HashTableList::HashTableList():
     size(0),
     head(0),
     tail(0)
-{ }
+{}
 
 
 HashTableList::LIST_CODES HashTableList::append(ListElement* new_element)
@@ -29,7 +31,7 @@ HashTableList::LIST_CODES HashTableList::append(ListElement* new_element)
         return LIST_WRONG_POINTER_PARAM;
     }
     
-    if (size == 1)
+    if (size == local_capacity)
     {
 
         new_element -> next_ = nullptr;
@@ -45,6 +47,13 @@ HashTableList::LIST_CODES HashTableList::append(ListElement* new_element)
     new_element -> next_ = nullptr;
     head = new_element;
     size++;
+    return LIST_OK;
+}
+
+HashTableList::LIST_CODES HashTableList::addLocalElement(const char* key, Type value)
+{
+    local_container[size]  .key_   = key;
+    local_container[size++].value_ = value;
     return LIST_OK;
 }
 
@@ -108,15 +117,17 @@ const char* HashTableList::getCodename(LIST_CODES code)
 ListElement* HashTableList::getElement(const char* key)
 {
     assert(key);
-    
-    if (size)
+
+    int n_element = 0;
+
+    for (; n_element < local_capacity; n_element++)
     {
-        if (!strcmp(key, tail_el.key_)) return &(tail_el);
-    }
+        if (!strcmp(key, local_container[n_element].key_)) return &(local_container[n_element]);
+    }    
 
     register ListElement* current_element = tail;
     //printf("s: %d\n", size);
-    for (int n_element = 1; n_element < size; n_element++)
+    for (; n_element < size; n_element++)
     {
         //printf("%p\n", current_element);
         //fflush(stdout);

@@ -25,12 +25,6 @@ int HashTable::addElement(const char* key, Type value)
     hash_t hash = hashfunc(key) % size;
     HashTableList* element_list = list_buffer + hash;
     
-    if (getElementInList(element_list, key))
-    {
-        //printf("%s already exists!\n");
-        return 1;
-    }
-    
     if (n_elements == capacity - 1)
     {
         if(!resize())
@@ -133,10 +127,7 @@ const char* HashTable::saveCSV(const char* filename)
     {
         HashTableList* current_list = list_buffer + n_list;
 
-        if (current_list -> size)
-        {
-            fprintf(fp, "%d,%d\n", n_list, current_list -> size);
-        }
+        fprintf(fp, "%d,%d\n", n_list, current_list -> size);
     }
     
     fclose(fp);

@@ -30,12 +30,9 @@ int HashTable::addElement(const char* key, Type value)
 
     ListElement*   new_element = nullptr;
 
-    if (!element_list -> size)
+    if (element_list -> size < LOCAL_LIST_CAPACITY)
     {
-        new_element = &(element_list -> tail_el);
-        element_list -> size++;
-        new_element -> key_         = key;
-        new_element -> value_       = value;
+        element_list -> addLocalElement(key, value);
         n_elements++;
         return 0;
     }
@@ -106,10 +103,8 @@ const char* HashTable::saveDistribution_CSV(const char* filename)
     {
         HashTableList* current_list = list_buffer + n_list;
 
-        if (current_list -> size)
-        {
-            fprintf(fp, "%d,%d\n", n_list, current_list -> size);
-        }
+        fprintf(fp, "%d,%d\n", n_list, current_list -> size);
+        
     }
     
     fclose(fp);
