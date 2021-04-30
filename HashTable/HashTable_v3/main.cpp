@@ -25,7 +25,7 @@ int main()
     WordList words = parseKeys_ACSV(dict400k);
 
     int n_read = 0;
-    for (int i = 0; i < 10; i ++)
+    for (int i = 0; i < 20; i ++)
         n_read = countWords(words, table);
     printf("%d\n", n_read);
 
