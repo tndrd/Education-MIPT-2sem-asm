@@ -6,6 +6,7 @@
 #include "assert.h"
 #include "assert.h"
 #include "string.h"
+#include "../../../Education-MIPT/Onegin/onegin.h"
 #include "config.h"
 #include "x86intrin.h"
 
@@ -30,10 +31,10 @@ hash_t ded_ror_hash(const char* key);
 
 hash_t MeowPurr_hash (const char* key);
 
-hash_t crc32(const char* key);
-
 hash_t opt1_crc32(const char* key);
 
 hash_t opt2_crc32(const char* key);
+
+hash_t crc32(const char *key);
 
 #endif

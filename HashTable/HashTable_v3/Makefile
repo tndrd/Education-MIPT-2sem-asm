@@ -1,5 +1,5 @@
 O2:
-	g++ main.cpp -O2 -g -DNDEBUG /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp hashfuncs.cpp HashTableMemoryManager.cpp parse.cpp -msse4 -mavx2 -o run
+	g++ main.cpp -O2 -g -DNDEBUG ../../../Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp hashfuncs.cpp HashTableMemoryManager.cpp parse.cpp -msse4 -o run
 pg:
 	g++ -pg main.cpp -g -O2 -DNDEBUG /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp hashfuncs.cpp HashTableMemoryManager.cpp parse.cpp -msse4 -o run
 	cat test.txt | ./run > /dev/null
@@ -13,7 +13,10 @@ csv:
 perf:
 	rm -f callgrind.out.*
 	valgrind --tool=callgrind ./run
-acsv:
-	cd Datasets/ded-dict/;   time python ded-dict-to-ACSV.py
-	cd Datasets/400k-words/; time python 400k-words-to-ACSV.py
+cachegrind:
+	rm -f callgrind.out.*
+	valgrind --tool=cachegrind ./run
+csv_data:
+	cd Datasets/ded-dict/;   time python ded-dict-to-CSV.py
+	cd Datasets/400k-words/; time python 400k-words-to-CSV.py
 

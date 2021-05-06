@@ -18,44 +18,38 @@ size_t countChars(char* buffer, char to_search)
     return n_found;
 }
 
-
-size_t countKeys_ACSV(char* keys)
+WordList parseCSV(char* buffer)
 {
-    assert(acsv);
-    assert((long int)keys % 16 == 0);
-
-    size_t n_key       = 0;
-    char*  current_key = keys + 16;
-
-    for (; *current_key; current_key += *(current_key-1) * 16) n_key++;
-
-    return n_key;
-}
-
-WordList parseKeys_ACSV(char* keys)
-{
-    assert(keys);
-    assert((long int)keys % 16 == 0);
+    assert(buffer);
+    size_t n_words = countChars(buffer, '=') + 1;
     
-    size_t n_words = countKeys_ACSV(keys) + 1;
-    
-    Word* words = (Word*)calloc(n_words, sizeof(Word));
+    char** words = (char**)calloc(n_words, sizeof(char*));
 
     if (!words)
     {
         printf("Failed to generate words array: out of mem\n");
         return {nullptr, 0};
     }
-
-    char* current_key   = keys + 16;
-
+    
     size_t n_word = 0;
+    
+    char* word_start = buffer;
 
-    for (unsigned char block_size = *(current_key - 1); *current_key; current_key += 16 * block_size, block_size = *(current_key - 1))
+    for (char* current_char = strchr(buffer, CSV_NEWLINE); current_char != nullptr; current_char = strchr(current_char, '\n'))
     {
-        *(current_key - 1) = '\0';
-        words[n_word]   .buff     = (const __m128i*) current_key;
-        words[n_word++] .n_blocks =                  block_size;
+        
+        *current_char = '\0';
+        current_char++;
+
+        char* separator = strchr(word_start, CSV_SEPARATOR);
+        if (!separator) throw std::runtime_error("Wrong file format: missing separator\n");
+
+        *(separator++) = '\0';
+
+
+        words[n_word++] = word_start;
+       
+        word_start  =  current_char;
     }
 
     return {words, n_word};

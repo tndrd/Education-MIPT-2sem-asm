@@ -7,18 +7,19 @@
 #include "math.h"
 #include "assert.h"
 #include "config.h"
+#include "string.h"
+#include <stdexcept>
 
 static char* Neutral();
 
 struct ListElement
 {
-    size_t next_ = 0;
-    size_t prev_ = 0;
+    ListElement* next_ = 0;
+    ListElement* prev_ = 0;
     const char*  key_ = nullptr;
-    
     Type value_;
 
-    ListElement(const char* key = nullptr, Type value = Neutral(), size_t next = 0, size_t prev = 0);
+    ListElement(const char* key = nullptr, Type value = Neutral(), ListElement* next = nullptr, ListElement* prev = nullptr);
     ListElement(const ListElement& that)              = delete;
     ListElement& operator= (const ListElement& that)  = delete;
 
@@ -26,13 +27,11 @@ struct ListElement
 };
 
 struct HashTableList
-{
+{   
+    ListElement* tail = 0;
     size_t size = 0;
-    size_t head = 0;
-    size_t tail = 0;
-
-    ListElement** data_buffer_ptr;
-
+    ListElement* head = 0;
+    volatile size_t test = 0;
     public:
 
     enum LIST_CODES
@@ -42,14 +41,18 @@ struct HashTableList
         #undef CODE
     };
 
-    HashTableList(ListElement** data_buffer);
+    HashTableList();
     HashTableList (const HashTableList& that)            = delete;
     //HashTableList& operator= (const HashTableList& that) = delete;
 
-    LIST_CODES append(size_t new_element_index);
+    LIST_CODES append(ListElement* new_element);
     int print(bool quiet = true);
     const char* getCodename(LIST_CODES code);
     LIST_CODES validate();
+
+    ListElement* getElement(const char* key);
+    Type getValue(const char* key);
+    void setValue(const char* key, Type value);
 
 };
 

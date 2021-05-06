@@ -1,6 +1,6 @@
 #include "hashtable.h"
 
-size_t countWords(WordList& wordlist, HashTable& table)
+size_t countWords(const WordList& wordlist, HashTable& table)
 {
     size_t n_found = 0;
 
@@ -14,8 +14,8 @@ size_t countWords(WordList& wordlist, HashTable& table)
 
 int main()
 {
-    HashTable table (131137, MeowPurr_hash);
-    
+    HashTable table (131137, opt2_crc32);
+
     char* ded_dict = ReadFile("../Datasets/Csv/ded-dict.csv");
     table.readCSV(ded_dict);
 
@@ -26,9 +26,8 @@ int main()
 
     for (int i = 0; i < 10; i ++)
         n_read = countWords(words, table);
-    
     printf("%d\n", n_read);
-
+    
     free(ded_dict);
     free(dict400k);
     free(words.words);

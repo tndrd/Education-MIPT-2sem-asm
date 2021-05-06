@@ -1,44 +1,38 @@
 #include "hashtable.h"
 
 HashTable::HashTable(size_t list_buffer_size, hash_t  (*hashfunc)(const char*)):
-    capacity    (INITIAL_HASHTABLE_CAPACITY),
-    data_buffer ((ListElement*)calloc(capacity + 1, sizeof(ListElement))),
-    list_buffer ((HashTableList*)calloc(list_buffer_size, sizeof(HashTableList))),
+    list_buffer ((HashTableList*)aligned_alloc(64, list_buffer_size * sizeof(HashTableList))),
     n_elements  (0),
     size        (list_buffer_size),
-    hashfunc    (hashfunc)
+    hashfunc    (hashfunc),
+    mem_manager ()
 { 
     for (int n_list = 0; n_list < size; n_list++)
     {
-        *(list_buffer + n_list) = HashTableList(&data_buffer);
+        assert(list_buffer);
+        *(list_buffer + n_list) = HashTableList();
     }
 }
 
 HashTable::~HashTable()
 {
-    free(data_buffer);
     free(list_buffer);
+}
+
+size_t HashTable::getQuantity()
+{
+    return n_elements;
 }
 
 int HashTable::addElement(const char* key, Type value)
 {
-    hash_t hash = hashfunc(key) % size;
-    HashTableList* element_list = list_buffer + hash;
-    
-    if (n_elements == capacity - 1)
-    {
-        if(!resize())
-        {
-            printf("Failed to resize\n");
-            return 2;
-        }
-    }
+    HashTableList* element_list = getList(key);
 
-    ListElement*   new_element  = data_buffer + n_elements + 1;
+    ListElement*   new_element  = mem_manager.getNewElement();
     new_element -> key_         = key;
     new_element -> value_       = value;
 
-    element_list -> append(n_elements + 1);
+    element_list -> append(new_element);
     n_elements++;
     return 0;
 }
@@ -62,60 +56,33 @@ void HashTable::dump(bool is_quite)
     printf("\nErrors total: %d\n", n_errors);
 }
 
-int HashTable::resize()
-{
-    size_t new_capacity = capacity * 2 + 1;
-    
-    ListElement* new_data_buffer = (ListElement*)realloc(data_buffer, new_capacity * sizeof(ListElement));
-
-    if (!new_data_buffer) return 0;
-
-    capacity    = new_capacity;
-    data_buffer = new_data_buffer;
-    return 1;
-}
-
 ListElement* HashTable::getElement(const char* key)
 {
-    hash_t hash = hashfunc(key) % size;
-    HashTableList* element_list = list_buffer + hash;
-    return getElementInList(element_list, key);
-}
-
-ListElement* HashTable::getElementInList(HashTableList* list, const char* key)
-{
-
-    ListElement* current_element = data_buffer + list -> tail;
-    size_t list_size             = list -> size;
-
-    for (int n_element = 0; n_element < list_size; n_element++)
-    {
-        if (!strncmp(key, current_element -> key_, MAX_KEY_LENGTH)) return current_element;
-
-        current_element = data_buffer + current_element -> next_;
-    }
-
-    return nullptr;
+    assert(key);
+    HashTableList* list = getList(key); 
+    return list -> getElement(key);
 }
 
 Type HashTable::getValue(const char* key)
 {
-    ListElement* element = getElement(key);
-    if (!element) throw std::logic_error("Element doesn't exist");
-
-    return element -> value_;
+    assert(key);
+    HashTableList* list = getList(key); 
+    return list -> getValue(key);
 }
 
 void HashTable::setValue(const char* key, Type value)
 {
-    ListElement* element = getElement(key);
-    if (!element) throw std::logic_error("Element doesn't exist");
-
-    element -> value_ = value;
+    assert(key);
+    HashTableList* list = getList(key); 
+    list -> setValue(key, value);
 }
 
+HashTableList* HashTable::getList(const char* key)
+{
+    return list_buffer + hashfunc(key) % size;
+}
 
-const char* HashTable::saveCSV(const char* filename)
+const char* HashTable::saveDistribution_CSV(const char* filename)
 {
     FILE* fp = fopen(filename, "w");
 
@@ -127,20 +94,15 @@ const char* HashTable::saveCSV(const char* filename)
     {
         HashTableList* current_list = list_buffer + n_list;
 
-        fprintf(fp, "%d,%d\n", n_list, current_list -> size);
+        if (current_list -> size)
+        {
+            fprintf(fp, "%d,%d\n", n_list, current_list -> size);
+        }
     }
     
     fclose(fp);
 
     return filename;
-}
-
-void HashTable::loadWords(WordList& words)
-{
-    for (int n_word = 0; n_word < words.quantity; n_word++)
-    {
-        addElement(words.words[n_word], 0);
-    }
 }
 
 size_t HashTable::readCSV(char* buffer)

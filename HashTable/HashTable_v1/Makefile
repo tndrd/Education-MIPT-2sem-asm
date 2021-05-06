@@ -1,5 +1,5 @@
 O2:
-	g++ main.cpp -O2 -g -DNDEBUG /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp hashfuncs.cpp parse.cpp -msse4 -o run
+	g++ main.cpp -O2 -g -DNDEBUG ../../../Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp hashfuncs.cpp HashTableMemoryManager.cpp parse.cpp -msse4 -o run
 pg:
 	g++ -pg main.cpp -g -O2 -DNDEBUG /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp hashfuncs.cpp HashTableMemoryManager.cpp parse.cpp -msse4 -o run
 	cat test.txt | ./run > /dev/null
@@ -9,7 +9,7 @@ O0:
 	g++ main.cpp -O0 /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp parse.cpp hashfuncs.cpp -o run
 
 csv:
-	g++ csv_gen.cpp -O2 /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp parse.cpp hashfuncs.cpp -o csv
+	g++ csv_gen.cpp -O2 /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp parse.cpp hashfuncs.cpp HashTableMemoryManager.cpp -o csv
 perf:
 	rm -f callgrind.out.*
 	valgrind --tool=callgrind ./run

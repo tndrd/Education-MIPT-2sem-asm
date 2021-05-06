@@ -13,6 +13,9 @@ csv:
 perf:
 	rm -f callgrind.out.*
 	valgrind --tool=callgrind ./run
+cachegrind:
+	rm -f callgrind.out.*
+	valgrind --tool=cachegrind ./run
 csv_data:
 	cd Datasets/ded-dict/;   time python ded-dict-to-CSV.py
 	cd Datasets/400k-words/; time python 400k-words-to-CSV.py

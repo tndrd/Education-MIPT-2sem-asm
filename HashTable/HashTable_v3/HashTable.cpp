@@ -1,6 +1,6 @@
 #include "hashtable.h"
 
-HashTable::HashTable(size_t list_buffer_size, hash_t  (*hashfunc)(const __m128i*, size_t)):
+HashTable::HashTable(size_t list_buffer_size, hash_t  (*hashfunc)(const char*)):
     list_buffer ((HashTableList*)aligned_alloc(64, list_buffer_size * sizeof(HashTableList))),
     n_elements  (0),
     size        (list_buffer_size),
@@ -24,26 +24,29 @@ size_t HashTable::getQuantity()
     return n_elements;
 }
 
-int HashTable::addElement(const __m128i* key, size_t n_blocks, Type value)
+int HashTable::addElement(const char* key, Type value)
 {
-    #ifdef HASHTABLE_SAFE
-    if (!key)       throw std::runtime_error("Wrong key");
-    if (!n_blocks_) throw std::runtime_error("Wrong size");
-    #endif
+    HashTableList* element_list = getList(key);
 
-    HashTableList* element_list = getList(key, n_blocks);
+    // v3 feature 
+    if (element_list -> size < LOCAL_LIST_CAPACITY)
+    {
+        element_list -> addLocalElement(key, value);
+        n_elements++;
+        return 0;
+    }
 
+    // code from v1 
     ListElement*   new_element  = mem_manager.getNewElement();
     new_element -> key_         = key;
     new_element -> value_       = value;
-    new_element -> n_blocks_    = n_blocks;
 
     element_list -> append(new_element);
     n_elements++;
     return 0;
 }
 
-void HashTable::dump(bool is_quiet)
+void HashTable::dump(bool is_quite)
 {   
     printf("Hashtable:\n");
 
@@ -56,36 +59,36 @@ void HashTable::dump(bool is_quiet)
         if (current_list -> size)
         {
             printf("#%d ", n_list, current_list -> size);
-            n_errors += (current_list -> print(is_quiet));
+            n_errors += (current_list -> print(is_quite));
         }
     }
     printf("\nErrors total: %d\n", n_errors);
 }
 
-ListElement* HashTable::getElement(const __m128i* key, size_t n_blocks)
+ListElement* HashTable::getElement(const char* key)
 {
     assert(key);
-    HashTableList* list = getList(key, n_blocks); 
-    return list -> getElement(key, n_blocks);
+    HashTableList* list = getList(key); 
+    return list -> getElement(key);
 }
 
-Type HashTable::getValue(const __m128i* key, size_t n_blocks)
+Type HashTable::getValue(const char* key)
 {
     assert(key);
-    HashTableList* list = getList(key, n_blocks); 
-    return list -> getValue(key, n_blocks);
+    HashTableList* list = getList(key); 
+    return list -> getValue(key);
 }
 
-void HashTable::setValue(const __m128i* key, size_t n_blocks, Type value)
+void HashTable::setValue(const char* key, Type value)
 {
     assert(key);
-    HashTableList* list = getList(key, n_blocks); 
-    list -> setValue(key, n_blocks, value);
+    HashTableList* list = getList(key); 
+    list -> setValue(key, value);
 }
 
-HashTableList* HashTable::getList(const __m128i* key, size_t n_blocks)
+HashTableList* HashTable::getList(const char* key)
 {
-    return list_buffer + hashfunc(key, n_blocks) % size;
+    return list_buffer + hashfunc(key) % size;
 }
 
 const char* HashTable::saveDistribution_CSV(const char* filename)
@@ -100,10 +103,8 @@ const char* HashTable::saveDistribution_CSV(const char* filename)
     {
         HashTableList* current_list = list_buffer + n_list;
 
-        if (current_list -> size)
-        {
-            fprintf(fp, "%d,%d\n", n_list, current_list -> size);
-        }
+        fprintf(fp, "%d,%d\n", n_list, current_list -> size);
+        
     }
     
     fclose(fp);
@@ -111,61 +112,28 @@ const char* HashTable::saveDistribution_CSV(const char* filename)
     return filename;
 }
 
-size_t HashTable::readACSV(char* keys, char* values)
+size_t HashTable::readCSV(char* buffer)
 {
-    assert(keys);
-    assert((long int)keys % 16 == 0);
-    assert(values);
+
+    assert(buffer);
     
-    char* current_key   = keys + 16;
-    char* word_start    = values;
-    char* word_end      = values;
+    char*  word_start  = buffer;
+    size_t words_read  = 0;
 
-    size_t words_read = 0;
-
-    char*  prev_key        = keys;
-    size_t prev_block_size = 0;
-    char*  prev_value      = values;
-
-    for (unsigned char block_size = *(current_key - 1); *current_key; current_key += 16 * block_size, block_size = *(current_key - 1))
+    for (char* current_char = strchr(buffer, CSV_NEWLINE); current_char != nullptr; current_char = strchr(current_char, '\n'))
     {
+        *current_char = '\0';
+        current_char++;
 
-        *(current_key - 1) = '\0';
+        char* separator = strchr(word_start, CSV_SEPARATOR);
+        if (!separator) throw std::runtime_error("Wrong file format: missing separator\n");
 
-        word_end = strchr(word_start, '\n');
-        
-        if (!word_end) throw std::runtime_error("Keys and values amounts do not match\n");
+        *(separator++) = '\0';
 
-        *word_end = '\0';
 
-        addElement((const __m128i*)prev_key, prev_block_size, prev_value);
-
-        prev_key = current_key;
-        prev_block_size = block_size;
-        prev_value = word_start;
-
-        word_start = word_end + 1;
-
+        addElement(word_start, separator);
         words_read++;
-
+        word_start  =  current_char;
     }
-
     return words_read;
-}
-
-size_t HashTable::validate()
-{
-
-    size_t n_errors = 0;
-
-    for (int n_list = 0; n_list < size; n_list++)
-    {
-        HashTableList* current_list = list_buffer + n_list;
-
-        if (current_list -> size)
-        {
-            n_errors += !!(current_list -> validate());
-        }
-    }
-    return n_errors;
 }

@@ -11,6 +11,7 @@
 #include "string.h"
 #include "../../../Education-MIPT/Onegin/onegin.h"
 #include "config.h"
+#include "list.h"
 
 struct WordList
 {

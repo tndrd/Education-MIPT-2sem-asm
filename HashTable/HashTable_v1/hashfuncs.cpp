@@ -132,20 +132,23 @@ hash_t MeowPurr_hash (const char* key)
     return h;
 }
 
-hash_t crc32(const char* key)
-{
-    hash_t crc = 0;
+hash_t crc32(const char *key) {
+   int i, j;
+   unsigned int byte, crc, mask;
 
-    char* current_char = (char*) key;
-
-    while (*current_char)
-    {
-        crc = _mm_crc32_u8(crc, *(current_char++));
-    }
-
-    return crc;
+   i = 0;
+   crc = 0xFFFFFFFF;
+   while (key[i] != 0) {
+      byte = key[i];            // Get next byte.
+      crc = crc ^ byte;
+      for (j = 7; j >= 0; j--) {    // Do eight times.
+         mask = -(crc & 1);
+         crc = (crc >> 1) ^ (0xEDB88320 & mask);
+      }
+      i = i + 1;
+   }
+   return ~crc;
 }
-
 
 hash_t opt1_crc32(const char* key)
 {
@@ -153,12 +156,6 @@ hash_t opt1_crc32(const char* key)
 
     char* current_char = (char*) key;
 
-    while (*current_char && *(current_char+1))
-    {
-        crc = _mm_crc32_u16(crc, *((unsigned short*)(current_char)));
-        current_char+=2;
-    }
-
     while (*current_char)
     {
         crc = _mm_crc32_u8(crc, *(current_char++));
@@ -166,7 +163,6 @@ hash_t opt1_crc32(const char* key)
 
     return crc;
 }
-
 
 hash_t opt2_crc32(const char* key)
 {
