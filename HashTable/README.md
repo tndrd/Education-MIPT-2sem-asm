@@ -209,7 +209,7 @@ hash_t crc32(const char *key)
 }
 ```
 
-We can boost the function by using [crc32 x86 intrinsics](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=crc). There are several intrinsics that perform crc32 algorithm. The difference between them is the amount of data that is hashed in one call. Hashing bigger amounts of data in one call is faster. 
+We can boost the function via [crc32 x86 intrinsics](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=crc). There are several intrinsics that perform crc32 algorithm. The difference between them is the amount of data that is hashed in one call. Hashing bigger amounts of data in one call is faster. 
 
 Thus, to make the most of ***crc32 intrinsics*** we should use the function that hashes the biggest amount of data (8 bytes), which is ```_mm_crc32_u64```, and avoid using other ***crc32 intrinsics***. However, this is not a solution for this particular implementation.
 
