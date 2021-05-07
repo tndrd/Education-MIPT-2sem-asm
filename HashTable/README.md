@@ -6,21 +6,21 @@ Throughout the article the hash table's performance was boosted by ***394%*** wi
 	      
 ## Contents
 
-* Before optimization
+* [Before optimization](https://github.com/tndrd/Education-MIPT-2sem-asm/blob/main/HashTable/README.md#before-optimization)
   * Initial implementation overview
   * Selecting hash-function and hash table size
   * Performance test program
   * Compilation and execution
   * Profiling software
-* First optimization
+* [First optimization](https://github.com/tndrd/Education-MIPT-2sem-asm/blob/main/HashTable/README.md#first-optimization)
   * Analysis
   * Using *crc32* intrinsic
   *  Results
-* Second optimization
+* [Second optimization](https://github.com/tndrd/Education-MIPT-2sem-asm/blob/main/HashTable/README.md#second-optimization)
   * Analysis
   * Using local list containers
   *  Results
-* Third optimization (optional)
+* [Third optimization](https://github.com/tndrd/Education-MIPT-2sem-asm/blob/main/HashTable/README.md#third-optimization)
   * Analysis
   * Transforming datasets' files
   * Using SSE intrinsics to boost *crc32* and *strncmp* functions
@@ -345,7 +345,7 @@ Elapsed user time is 561 ms now. Program runs ***32%*** faster than the previous
 
 Hash table v3 source code can be found [here](https://github.com/tndrd/Education-MIPT-2sem-asm/tree/main/HashTable/HashTable_v2).
 
-## Third optimization (optional)
+## Third optimization
 
 Again, let's run the Callgrind:
 
@@ -413,7 +413,7 @@ inline int SIMD_strcmp(const __m128i* a, size_t a_n_blocks, const __m128i* b, si
 ```
 
 We compare the keys by checking the equivalence of their whole blocks.  Since we replaced the "size chars" with zeros, the remaining spaces in keys' blocks are both empty. That means that the result of comparison wouldn't depend on undefined values.
-This fact allows us to boost our crc32 function. Now we can hash bigger blocks during one iteration unlike [previous crc32 version](). Since we now know the size of each key's corresponding block, zero-char checks are not needed.
+This fact allows us to boost our crc32 function. Now we can hash bigger blocks during one iteration unlike [previous crc32 version](https://github.com/tndrd/Education-MIPT-2sem-asm/blob/main/HashTable/README.md#first-optimization). Since we now know the size of each key's corresponding block, zero-char checks are not needed.
 
 Here is the new version of ```crc32```:
 ```cpp
