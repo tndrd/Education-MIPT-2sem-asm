@@ -58,16 +58,27 @@ jupyter notebook
 ```
 That's the result. First, let's have a look at some weird hash-functions: 
 1. h(s) = s[0]
-  ![key_0](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/ascii0.png)
+
+![key_0](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/ascii0.png)
+
 2. h(s) = len(s):
+
 ![key_0](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/hash_len.png) 
+
 3. h(s) = sum(s[i]):
+
 ![key_0](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/hash_sum.png)
+
 4. h(s) = sum(s[i]) / len(s):
+
 ![key_0](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/hash_sum_len.png)
+
 5. h(s)[i+1] = rol(h(s)[i]) xor s[i+1]
+
 ![key_0](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/ded_rol_hash.png) 
+
 7. h(s)[i+1] = ror(h(s)[i]) xor s[i+1]
+
 ![key_0](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/ded_ror_hash.png)
 
 As you may see, using appropriate hash functions is quite important for distribution's uniformity, so it is better to use more complicated ones, like [MurmurHash2](https://ru.wikipedia.org/wiki/MurmurHash2)([🐈‍](https://preview.redd.it/abd1kh5yy3w51.jpg?width=1125&format=pjpg&auto=webp&s=d8eda40ceecf0e8d2efec1c897c885ddf7f72c97)) or [crc32](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) functions:
