@@ -32,6 +32,7 @@ Throughout the article the hash table's performance was boosted by ***394%*** wi
 Hash table is a data structure that can map keys to values. The main idea is that each key is hashed to get an index which points to its corresponding value. This trick provides faster key-value access in comparison with some obvious implementations like searching for a specific key in an array. However, we're not protected from hash collisions, because there may be two keys that have the same hash. There are several methods of collision resolution, the one I've implemented is called separate chaining with linked lists. The scheme below represents the hash table's structure: 
 
 ![hash table scheme](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/scheme.png)
+
 The ```HashTable``` structure refers to an array of linked list headers (```list_buffer```) which length equals ```size```. Each list in this array links all the key-value pairs whose keys have the same hash. All the elements of all the lists are stored in buffers, that are allocated by ```HashTableMemoryManager``` class. The ```current_buffer``` is a buffer that is used right now. The field ```n_elements``` represents number of elements in the table.
 The ```hash_func``` is a pointer to hash function, which is specified as a parameter when we call the constructor.
 
@@ -138,6 +139,7 @@ The v1's execution result is that the dictionary contains 60403 keys from the 40
 The elapsed user time is 1687 ms.
 
 ![v1 time](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/v1_time.png)
+
 Now let's see how we can optimize our program.
 
 ### Profiling software
@@ -240,6 +242,7 @@ As you may see, this functions firstly tries to hash two bytes in one call. If t
 Now test program runs ***128%*** faster. Elapsed user time is 740 ms.
 
 ![v2 time](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/v2_time.png)
+
 Hash table v2 source code can be found [here](https://github.com/tndrd/Education-MIPT-2sem-asm/tree/main/HashTable/HashTable_v2).
 
 ## Second optimization
@@ -268,6 +271,7 @@ At first glance, it is not obvious what we can optimize here. The hypothesis is 
 Let's use VTune profiler memory access performance analysis tool:
 
 ![vtune_macc](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/vtune_macc.png)
+
 The function's average read latency is high. In fact, this metric varies from one measurement to another. Let's do several measurements and calculate the average and its inaccuracy.
 | Latency, cycles||||||||||
 |-----|-----|----|-----|----|-----|----|-----|----|----|
