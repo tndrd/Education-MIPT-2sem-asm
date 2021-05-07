@@ -204,7 +204,7 @@ Thus, to make the most of ***crc32 intrinsics*** we should use the function that
 
 The reason is that the keys, which are stored in the file, are not divided into separate blocks. We can not hash the key only with ```_mm_crc32_u64``` and ignore the key length. In this case the hash value may depend on trash values located after the end of the key, so the hash function result will be undefined. 
 
-We can avoid reading trash values by storing the keys separately, as was mentioned earlier. The way is to divide the keys in the input file. Also we can speculatively calculate and store keys' lengths to avoid checking null-chars.  But there are several problems in using this method, that may cause the hash table to be less efficient in some situations. Let's put off this idea [for a while](part4). Now we will use more simple and general solution.
+We can avoid reading trash values by storing the keys separately, as was mentioned earlier. The way is to divide the keys in the input file. Also we can speculatively calculate and store keys' lengths to avoid checking null-chars.  But there are several problems in using this method, that may cause the hash table to be less efficient in some situations. Let's put off this idea [for a while](https://github.com/tndrd/Education-MIPT-2sem-asm/blob/main/HashTable/README.md#third-optimization-optional). Now we will use more simple and general solution.
 
 ### Using crc32 intrinsic in a simple way
 
