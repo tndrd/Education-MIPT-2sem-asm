@@ -94,10 +94,8 @@ const char* HashTable::saveDistribution_CSV(const char* filename)
     {
         HashTableList* current_list = list_buffer + n_list;
 
-        if (current_list -> size)
-        {
-            fprintf(fp, "%d,%d\n", n_list, current_list -> size);
-        }
+        fprintf(fp, "%d,%d\n", n_list, current_list -> size);
+        
     }
     
     fclose(fp);

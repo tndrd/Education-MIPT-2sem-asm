@@ -7,9 +7,6 @@ pg:
 	gprof2dot ./profile | dot -Tsvg -o output.svg
 O0:
 	g++ main.cpp -O0 /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp parse.cpp hashfuncs.cpp -o run
-
-csv:
-	g++ csv_gen.cpp -O2 /home/tndnrd/Projects/Education-MIPT/Onegin/foperations.cpp HashTable.cpp List.cpp parse.cpp hashfuncs.cpp HashTableMemoryManager.cpp -o csv
 perf:
 	rm -f callgrind.out.*
 	valgrind --tool=callgrind ./run
@@ -17,6 +14,6 @@ cachegrind:
 	rm -f callgrind.out.*
 	valgrind --tool=cachegrind ./run
 csv_data:
-	cd Datasets/ded-dict/;   time python ded-dict-to-CSV.py
-	cd Datasets/400k-words/; time python 400k-words-to-CSV.py
+	cd ../Datasets/ded-dict/;   time python ded-dict-to-CSV.py
+	cd ../Datasets/400k-words/; time python 400k-words-to-CSV.py
 
