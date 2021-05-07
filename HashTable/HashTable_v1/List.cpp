@@ -113,7 +113,7 @@ ListElement* HashTableList::getElement(const char* key)
     
     for (int n_element = 0; n_element < size; n_element++)
     {
-        if (!strcmp(key, current_element -> key_)) return current_element;
+        if (!strncmp(key, current_element -> key_, MAX_KEY_LENGTH)) return current_element;
         current_element = current_element -> next_;
     }
 

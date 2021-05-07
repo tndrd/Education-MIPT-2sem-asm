@@ -14,7 +14,7 @@ size_t countWords(const WordList& wordlist, HashTable& table)
 
 int main()
 {
-    HashTable table (131137, opt2_crc32);
+    HashTable table (131137, crc32);
 
     char* ded_dict = ReadFile("../Datasets/Csv/ded-dict.csv");
     table.readCSV(ded_dict);
