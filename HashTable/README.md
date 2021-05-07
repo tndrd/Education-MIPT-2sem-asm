@@ -382,7 +382,7 @@ This is a hex view of [the transformed dictionary dataset](https://github.com/tn
 
 ![acsv](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/acsv.png)
 
-The next step is to read this file into a buffer allocated with GCC's ```aligned_alloc``` using ```HashTable::readACSV``` function, storing each key's block size. Then we should replace the "size chars" with zeros.
+The next step is to read this file into a buffer allocated with GCC's ```aligned_alloc``` using ```HashTable::readACSV``` function, storing each key's block size. Then we should replace the "size chars" with zeros. Now we can read the keys as ```__m128i*``` and easily operate with them using SSE intrinsics.
 
 ### Using SSE intrinsics to boost *crc32* and *strcmp*
 
