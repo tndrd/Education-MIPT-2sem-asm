@@ -451,7 +451,7 @@ Elapsed user time is 341 ms now. Program runs ***58%*** faster than the previous
 
 ![v4 time](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/v4_time.png)
 
-That's the output of Callgind:
+This is the output of Callgind:
 
 ![last](https://raw.githubusercontent.com/tndrd/Education-MIPT-2sem-asm/main/HashTable/assets/v4_callgr.png)
 
