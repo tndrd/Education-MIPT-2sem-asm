@@ -25,7 +25,7 @@ Throughout the article the hash table's performance was boosted by ***394%*** wi
   * Transforming datasets' files
   * Using SSE intrinsics to boost *crc32* and *strncmp* functions
   * Results
-* Conclusion 
+* [Conclusion](https://github.com/tndrd/Education-MIPT-2sem-asm/tree/main/HashTable#consclusion) 
 
 ## Before optimization
 
