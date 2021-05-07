@@ -208,7 +208,7 @@ We can avoid reading trash values by storing the keys separately, as was mention
 
 ### Using crc32 intrinsic in a simple way
 
-Even if we are not able to take the most out of crc32 intrinsics now, we can use it in the common way.
+Though we are not able to take the most out of crc32 intrinsics now, we can use them in the common way.
 
 That's the new crc32 implementation:
 ```cpp
