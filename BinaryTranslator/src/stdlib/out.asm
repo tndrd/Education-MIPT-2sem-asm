@@ -1,10 +1,13 @@
-global _start
+global _stdlib_out_
 
 section .data
-	val: dq 423.139
+
+    val dq 0
+
 	dot db "."
 	mns db "-"
 	zer db "0"
+    nln db 10
 
 	pr equ 8
 	precision dq 1000000
@@ -25,18 +28,15 @@ section .bss
 
 section .text
 
-_start:
-
-	call _stdlib_out_
-
-	exit:
-    mov rdi, 0
-    mov rax, 60
-    syscall
-
 _stdlib_out_:
+
     fst qword [val]
     call PrintFloat64
+
+    mov rsi, nln
+    mov rdx, 1
+    call PutToStdout
+
     ret
 
 PrintFloat64:
@@ -143,6 +143,9 @@ ExploreBinDec:
 	mov rsi, obuf
 	call PutToStdout
 
+	cmp r10, 1
+	je exit_expl
+
 	sub r10, 1
 
 	jmp skip_this_shit
@@ -153,7 +156,7 @@ ExploreBinDec:
 	skip_this_shit:
 
 	expl_loop:
-		
+
 		mov rdx, r10
 
 		mov bl, byte [bindec + rdx - 1]

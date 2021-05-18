@@ -12,8 +12,38 @@ section .bss
 section .text
 
 _stdlib_in_:
+
 	call FillInBuffer
-	call ParseDouble
+
+	cmp byte [in_buffer], "-"
+	jne Positive
+
+	Negative:
+		add  rcx, 1
+		push 1
+		mov byte [in_buffer], "0"
+		jmp  StartParsing
+
+	Positive:
+		push 0
+		jmp  StartParsing
+
+	StartParsing: call ParseDouble
+
+	pop rdx
+	cmp rdx, 1
+	jne Return
+
+	fchs
+
+    Return: ret
+
+    EmptyInputHandler:
+        pop rbx
+        mov  qword  [val], 0
+        fild qword [val]
+
+    ret
 
 FillInBuffer:
 
@@ -34,32 +64,26 @@ FillInBuffer:
 		cmp dl, 10
 		je end_reading
 
+		cmp dl, 4
+		je end_reading
+
 		mov [in_buffer + rbx], dl
 		add rbx, 1
 
 		jmp read_loop
 	
-	end_reading: 
-		
-		mov rax, 1
-		mov rdi, 1
-		mov rsi, in_buffer
-		mov rdx, rbx
-		syscall
-
-		mov rax, 1
-		mov rdi, 1
-		mov rsi, newline
-		mov rdx, 1
-		syscall
-
-		ret
+    end_reading:
+    
+        cmp rbx, 0
+        je EmptyInputHandler
+    
+    ret
 
 ParseDouble:
 
 	; takes rbx - number of chars in in_buffer
 
-	xor rax, rax ; would be value where we store our number's integer an decimal parts
+	xor rax, rax ; would be value where we store our number's integer and decimal parts
 
 	xor rcx, rcx
 
@@ -79,6 +103,9 @@ ParseDouble:
 
 	mov [val], r14
 	fild qword [val]
+
+    cmp rbx, rcx
+    je end
 
 	add rcx, 1
 	sub rbx, 1
@@ -101,7 +128,7 @@ ParseDouble:
 	fdiv
 	fadd
 
-	ret
+	end: ret
 
 ParseInteger:
 
@@ -121,7 +148,7 @@ ParseInteger:
 			xor rax, rax
 
 			mov al, byte [in_buffer + rsi] ; al = digit
-			sub al, "0"					; r12 = degree
+			sub al, "0"					   ; r12 = degree
 
 			;now we need to pow(al, r12)
 			call Pow10
