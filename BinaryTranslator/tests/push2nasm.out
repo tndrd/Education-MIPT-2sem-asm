@@ -1,0 +1,13 @@
+push 23
+
+push rax
+
+add rax, 23.000000
+push rax
+
+push [ offset MemSpace + 23 ]
+
+push [ offset MemSpace + rax ]
+
+push [ offset MemSpace + rax + 23 ]
+
