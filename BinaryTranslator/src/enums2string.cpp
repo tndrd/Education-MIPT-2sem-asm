@@ -8,15 +8,35 @@ const char* getEnum_Operation(Operation operation)
     {
         ENUM_CASE(OP_EMPTY);
         ENUM_CASE(PUSH);
+        ENUM_CASE(MOV);
+        ENUM_CASE(FLD);
+        ENUM_CASE(FST);
+        ENUM_CASE(IN);
+        ENUM_CASE(OUT);
+        ENUM_CASE(HLT);
         ENUM_CASE(POP);
-        ENUM_CASE(JMP);
+        ENUM_CASE(FCOMPP);
+        ENUM_CASE(FSTSW);
+        ENUM_CASE(SAHF);
+        ENUM_CASE(JUMP);
         ENUM_CASE(ARITHMETIC);
         ENUM_CASE(STDLIB);
         ENUM_CASE(RETURN);
-        ENUM_CASE(CALL);
         ENUM_CASE(COMPARE);
 
-        default: return "UNKNOWN";
+        default: return RED_CLR "UNKNOWN" END_CLR;
+    }
+     
+}
+
+const char* getEnum_SpecName(SpecName name)
+{
+    #define ENUM_CASE(enum_name) case enum_name: return #enum_name;
+
+    switch(name)
+    {
+        ENUM_CASE(VALUE_BUFFER);
+        default: return RED_CLR "UNKNOWN" END_CLR;
     }
      
 }
@@ -31,8 +51,9 @@ const char* getEnum_RegName(RegName reg)
         ENUM_CASE(RBX);
         ENUM_CASE(RCX);
         ENUM_CASE(RDX);
+        ENUM_CASE(AX);
         ENUM_CASE(REG_NONE);
-        default: return "UNKNOWN";
+        default: return RED_CLR "UNKNOWN" END_CLR;
     }
      
 }
@@ -47,7 +68,7 @@ const char* getEnum_ArithmeticOperation(ArithmeticOperation operation)
         ENUM_CASE(SUB);
         ENUM_CASE(MUL);
         ENUM_CASE(DIV);
-        default: return "UNKNOWN";
+        default: return RED_CLR "UNKNOWN" END_CLR;
     }
      
 }
@@ -58,13 +79,15 @@ const char* getEnum_JumpOperation(JumpOperation operation)
 
     switch(operation)
     {
+        ENUM_CASE(JMP);
+        ENUM_CASE(CALL);
         ENUM_CASE(JA);
         ENUM_CASE(JAE);
         ENUM_CASE(JB);
         ENUM_CASE(JBE);
         ENUM_CASE(JE);
         ENUM_CASE(JNE);
-        default: return "UNKNOWN";
+        default: return  RED_CLR "UNKNOWN" END_CLR;
     }
      
 }
@@ -74,7 +97,7 @@ const char* GetOperationName(Operation op_type, OperationName name)
     switch(op_type)
     {
         case ARITHMETIC: return getEnum_ArithmeticOperation(name.ari_op);
-        case JMP       : return getEnum_JumpOperation(name.jmp_op);
+        case JUMP       : return getEnum_JumpOperation(name.jmp_op);
         default:         return getEnum_Operation(op_type);
     }
 }

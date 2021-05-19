@@ -4,37 +4,22 @@
 #include "tests.h"
 #include "token.h"
 #include "tokenlist.h"
+#include "tokenization.h"
 
 
 int main()
 {
     runTests();
 
-    TokenList* token_list = newTokenList();
 
-    Operand a = {};
-    Operand b = {};
+    long  int filesize = 0;
+    char* code = ReadFile("pushtest", &filesize);
+    
 
-    Token* first = newToken(PUSH, {NO_SUBNAME}, nullptr, nullptr);
-    AssignAdrOperand(&a, 0x532);
-    AssignRegOperand(&b, RAX);
-    assignOperands(first, &a, &b);
-    append(token_list, first);
-
-    Token* second = newToken(PUSH, {NO_SUBNAME}, nullptr, nullptr);
-    AssignAdrOperand(&a, 0x532);
-    AssignRegOperand(&b, RAX);
-    assignOperands(second, &a, &b);
-    append(token_list, second);
-
-    Token* third = newToken(PUSH, {NO_SUBNAME}, nullptr, nullptr);
-    AssignAdrOperand(&a, 0x532);
-    AssignEmpOperand(&b);
-    assignOperands(third, &a, &b);
-    append(token_list, third);
+    TokenList* token_list = Tokenize(code, filesize);
 
     printTokens(token_list);
-    //drawTokens(token_list);
+    drawTokens(token_list);
     /*
     AssignAdrOperand(&a, 0x532);
     AssignCstOperand(&b, 239);

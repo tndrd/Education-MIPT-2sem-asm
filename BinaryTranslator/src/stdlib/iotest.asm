@@ -1,6 +1,8 @@
 global _start
+
 extern _stdlib_in_
 extern _stdlib_out_
+extern _stdlib_hlt_
 
 section .data
 	startmsg db "Enter a decimal number:", 10
@@ -19,27 +21,23 @@ section .text
 
 _start:
 
-	mov rsi, startmsg
-	mov rdx, startlen
-	call PutToStdout
+	mov 	rsi, startmsg
+	mov 	rdx, startlen
+	call 	PutToStdout
 
-	call _stdlib_in_
+	call 	_stdlib_in_
 	
-	mov rsi, inmsg
-	mov rdx, inlen
-	call PutToStdout
+	mov 	rsi, inmsg
+	mov 	rdx, inlen
+	call 	PutToStdout
 	
-	call _stdlib_out_
+	call 	_stdlib_out_
 
-	mov rsi, outmsg
-	mov rdx, outlen
-	call PutToStdout
+	mov 	rsi, outmsg
+	mov 	rdx, outlen
+	call 	PutToStdout
 
-	exit:
-    mov rdi, 0
-    mov rax, 60
-    syscall
-	
+	call 	_stdlib_hlt_
 
 PutToStdout:
 

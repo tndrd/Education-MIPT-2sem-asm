@@ -19,10 +19,12 @@ void DeleteToken(Token* token)
 
 Token* assignOperands(Token* thou, Operand* a, Operand* b)
 {
-    if (!thou) return nullptr;
+    if (!thou || !a) return nullptr;
 
+    if (b)
+        thou -> b = *b;
     thou -> a = *a;
-    thou -> b = *b;
+    
 
     return thou;
 }
@@ -64,11 +66,30 @@ Operand* AssignEmpOperand(Operand* operand)
     return operand;
 }
 
+Operand* AssignSpecOperand(Operand* operand, SpecName name)
+{
+    if (!operand) return nullptr;
+    
+    operand -> type = SPEC_NAME;
+    operand -> name = name;
+    return operand;
+}
+
+Operand* AssignLabelOperand(Operand* operand, unsigned char label)
+{
+    if (!operand) return nullptr;
+
+    operand -> type      = TOKEN_REF;
+    operand -> label     = label; 
+    return operand;
+}
+
 Token* printToken(Token* token)
 {
     if (!token) return nullptr;
 
     printf("%s ", GetOperationName(token -> op_type, token -> op_name));
+    
     if ((token -> a).type) printOperand(stdout, &(token -> a));
     if ((token -> b).type)
     {
@@ -85,12 +106,16 @@ Operand* printOperand(FILE* fp, Operand* operand)
 {
     if (!operand) return nullptr;
 
+    //printf("fucking ");
+
     switch (operand -> type)
     {
         case OPERAND_EMPTY: fprintf(fp, "NONE"); break;
+        case SPEC_NAME    : fprintf(fp, "%s",  getEnum_SpecName(operand -> name)); break;
         case r64          : fprintf(fp, "%s",  getEnum_RegName(operand -> reg)); break;
         case m64          : fprintf(fp, "[%x]",  operand -> mem); break;
         case imm64        : fprintf(fp, "%lf", operand -> cst); break;
+        case TOKEN_REF    : fprintf(fp, "label_%d", operand -> label); break;
     }
 
     return operand;

@@ -1,14 +1,11 @@
 all:
-	cd src; g++ main.cpp Token.cpp TokenList.cpp enums2string.cpp tests.cpp translator.cpp ../../../Education-MIPT/Onegin/foperations.cpp -o ../translate;
+	cd src; g++ main.cpp Token.cpp TokenList.cpp Tokenization.cpp enums2string.cpp tests.cpp translator.cpp foperations.cpp -o ../translate;
 
 stdlib:
-	cd src; nasm -f elf64 stdlib/out.asm -o stdlib/out.o; nasm -f elf64 stdlib/in.asm -o stdlib/in.o;
+	cd src; nasm -f elf64 stdlib/out.asm -o stdlib/out.o; nasm -f elf64 stdlib/in.asm -o stdlib/in.o; nasm -f elf64 stdlib/hlt.asm -o stdlib/hlt.o;
 	
 iotest:
-	cd src; nasm -f elf64 stdlib/iotest.asm -o stdlib/iotest.o; ld -o ../iotest stdlib/in.o stdlib/out.o stdlib/iotest.o;
-
-out:
-	cd src; nasm -f elf64 stdlib/out.asm -o stdlib/out.o; ld -o ../iotest stdlib/out.o;
+	cd src; nasm -f elf64 stdlib/iotest.asm -o stdlib/iotest.o; ld -o ../iotest stdlib/in.o stdlib/out.o stdlib/iotest.o stdlib/hlt.o;
 
 clean:
 	rm -f iotest translate

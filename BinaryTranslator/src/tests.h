@@ -5,7 +5,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "coloring.h"
-#include "../../../Education-MIPT/Onegin/onegin.h"
+#include "foperations.h"
 #include "translator.h"
 
 const size_t TEST_OUTPUT_BUFFER_SIZE = 2048;

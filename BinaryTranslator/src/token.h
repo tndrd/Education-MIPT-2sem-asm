@@ -8,23 +8,32 @@
 enum Operation
 {
     OP_EMPTY,
+    FLD,
+    FST,
     PUSH,
+    MOV,
     POP,
-    JMP,
+    JUMP,
+    IN,
+    OUT,
+    HLT,
+    FCOMPP,
+    FSTSW,
+    SAHF,
     ARITHMETIC,
     STDLIB,
     RETURN,
-    CALL,
     COMPARE
 };
 
 enum RegName
 {
     REG_NONE = 0,
-    RAX,
-    RBX,
-    RCX,
-    RDX
+    RAX = 'a',
+    RBX = 'b',
+    RCX = 'c',
+    RDX = 'd',
+    AX  = 'A'
 };
 
 enum ArithmeticOperation
@@ -37,6 +46,8 @@ enum ArithmeticOperation
 
 enum JumpOperation
 {
+    JMP,
+    CALL,
     JA,
     JAE,
     JB,
@@ -53,9 +64,16 @@ enum GeneralOperation
 enum OperandType
 {
     OPERAND_EMPTY = 0,
+    SPEC_NAME,
+    TOKEN_REF,
     r64,
     m64,
     imm64
+};
+
+enum SpecName
+{
+    VALUE_BUFFER
 };
 
 union OperationName
@@ -67,15 +85,19 @@ union OperationName
 
 #include "enums2string.h"
 
+struct Token;
+
 struct Operand
 {
     OperandType type = OPERAND_EMPTY;
 
     union
     {
-        double     cst = 0; // for double constants
-        u_int64_t mem;     // for jmp offsets and memory adresses
-        RegName    reg;     // for register operands
+        double        cst = 0;   // for double constants
+        u_int64_t     mem;       // for jmp offsets and memory adresses
+        RegName       reg;       // for register operands
+        SpecName      name; 
+        unsigned char label;     // for token references
     };
 };
 
@@ -92,11 +114,11 @@ struct Token
     Token* prev = nullptr;
 };
 
-Token* newToken(Operation op_type, OperationName op_name, Token* next, Token* prev);
+Token* newToken(Operation op_type = OP_EMPTY, OperationName op_name = {NO_SUBNAME}, Token* next = nullptr, Token* prev = nullptr);
 
 void DeleteToken(Token* token);
 
-Token* assignOperands(Token* thou, Operand* a, Operand* b);
+Token* assignOperands(Token* thou, Operand* a, Operand* b = nullptr);
 
 Operand* AssignRegOperand(Operand* operand, RegName reg_name);
 
@@ -104,10 +126,13 @@ Operand* AssignCstOperand(Operand* operand, double val);
 
 Operand* AssignAdrOperand(Operand* operand, u_int64_t val);
 
+Operand* AssignSpecOperand(Operand* operand, SpecName name);
+
 Operand* AssignEmpOperand(Operand* operand);
 
 Token* printToken(Token* token);
 
 Operand* printOperand(FILE* fp, Operand* operand);
 
+Operand* AssignLabelOperand(Operand* operand, unsigned char label);
 #endif

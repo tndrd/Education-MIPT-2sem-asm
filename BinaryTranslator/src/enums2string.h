@@ -9,5 +9,6 @@ const char* getEnum_RegName(RegName reg);
 const char* getEnum_ArithmeticOperation(ArithmeticOperation operation);
 const char* getEnum_JumpOperation(JumpOperation operation);
 const char* GetOperationName(Operation op_type, OperationName name);
+const char* getEnum_SpecName(SpecName name);
 
 #endif

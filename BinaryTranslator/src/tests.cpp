@@ -38,8 +38,10 @@ static int runTest(const char* name, void (*func2test)(char*, char*), const char
 {
     printf("#%d Starting %s test: ", *(test_number++), name);
 
-    char* testdata_in  = ReadFile(testfile_in);
-    char* testdata_out = ReadFile(testfile_out);
+    long int filesize = 0;
+
+    char* testdata_out = ReadFile(testfile_out, &filesize);
+    char* testdata_in  = ReadFile(testfile_in,  &filesize);
 
     bool do_test = true;
 
