@@ -1,0 +1,10 @@
+bits 64
+
+global _start
+
+extern _stdlib_in_
+extern _stdlib_out_
+extern _stdlib_hlt_
+
+section .data
+	value_buffer dq 0

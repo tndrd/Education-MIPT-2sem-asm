@@ -1,109 +1,120 @@
 digraph structs {
 rankdir=LR rank=same;
-1888953296 [shape=record, fillcolor=green rank = same style=filled label="    CALL  | {label_1 }" ];
-1888953296 -> 1888953360
-1888953296 -> 1888953744
-1888953360 [shape=record, fillcolor=green rank = same style=filled label="    IN " ];
-1888953360 -> 1888953424
-1888953424 [shape=record, fillcolor=green rank = same style=filled label="    OUT " ];
-1888953424 -> 1888953552
-1888953552 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {VALUE_BUFFER | 23.000000 }" ];
-1888953552 -> 1888953488
-1888953488 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {VALUE_BUFFER }" ];
-1888953488 -> 1888953680
-1888953680 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {VALUE_BUFFER | RBX }" ];
-1888953680 -> 1888953616
-1888953616 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {VALUE_BUFFER }" ];
-1888953616 -> 1888953744
-1888953744 [shape=record, fillcolor=green rank = same style=filled label="    FADD " ];
-1888953744 -> 1888953872
-1888953872 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {VALUE_BUFFER | 5.000000 }" ];
-1888953872 -> 1888953808
-1888953808 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {VALUE_BUFFER }" ];
-1888953808 -> 1888953936
-1888953936 [shape=record, fillcolor=green rank = same style=filled label="    FSUB " ];
-1888953936 -> 1888954064
-1888954064 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {VALUE_BUFFER | RCX }" ];
-1888954064 -> 1888954000
-1888954000 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {VALUE_BUFFER }" ];
-1888954000 -> 1888954128
-1888954128 [shape=record, fillcolor=green rank = same style=filled label="    JMP  | {label_1 }" ];
-1888954128 -> 1888954192
-1888954128 -> 1888953744
-1888954192 [shape=record, fillcolor=green rank = same style=filled label="    JMP  | {label_0 }" ];
-1888954192 -> 1888954256
-1888954192 -> 1888953296
-1888954256 [shape=record, fillcolor=green rank = same style=filled label="    JMP  | {label_3 }" ];
-1888954256 -> 1888954320
-1888954256 -> 1888955696
-1888954320 [shape=record, fillcolor=green rank = same style=filled label="    JMP  | {label_2 }" ];
-1888954320 -> 1888954384
-1888954320 -> 1888954704
-1888954384 [shape=record, fillcolor=green rank = same style=filled label="    FCHS " ];
-1888954384 -> 1888954448
-1888954448 [shape=record, fillcolor=green rank = same style=filled label="    FMUL " ];
-1888954448 -> 1888954512
-1888954512 [shape=record, fillcolor=green rank = same style=filled label="    CALL  | {label_2 }" ];
-1888954512 -> 1888954576
-1888954512 -> 1888954704
-1888954576 [shape=record, fillcolor=green rank = same style=filled label="    RETURN " ];
-1888954576 -> 1888954704
-1888954704 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {VALUE_BUFFER | RBX }" ];
-1888954704 -> 1888954640
-1888954640 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {VALUE_BUFFER }" ];
-1888954640 -> 1888954768
-1888954768 [shape=record, fillcolor=green rank = same style=filled label="    FDIV " ];
-1888954768 -> 1888954832
-1888954832 [shape=record, fillcolor=green rank = same style=filled label="    FST  | {VALUE_BUFFER }" ];
-1888954832 -> 1888954896
-1888954896 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {RSI | VALUE_BUFFER }" ];
-1888954896 -> 1888955024
-1888955024 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {VALUE_BUFFER | 15.000000 }" ];
-1888955024 -> 1888954960
-1888954960 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {VALUE_BUFFER }" ];
-1888954960 -> 1888955568
-1888955568 [shape=record, fillcolor=green rank = same style=filled label="    CALL  | {label_3 }" ];
-1888955568 -> 1888955632
-1888955568 -> 1888955696
-1888955632 [shape=record, fillcolor=green rank = same style=filled label="    RETURN " ];
-1888955632 -> 1888955696
-1888955696 [shape=record, fillcolor=green rank = same style=filled label="    OUT " ];
-1888955696 -> 1888955760
-1888955760 [shape=record, fillcolor=green rank = same style=filled label="    FST  | {VALUE_BUFFER }" ];
-1888955760 -> 1888955824
-1888955824 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {RDX | VALUE_BUFFER }" ];
-1888955824 -> 1888955952
-1888955952 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {VALUE_BUFFER | 3.000000 }" ];
-1888955952 -> 1888955888
-1888955888 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {VALUE_BUFFER }" ];
-1888955888 -> 1888956016
-1888956016 [shape=record, fillcolor=green rank = same style=filled label="    FST  | {VALUE_BUFFER }" ];
-1888956016 -> 1888956080
-1888956080 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {RDX | VALUE_BUFFER }" ];
-1888956080 -> 1888956208
-1888956208 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {VALUE_BUFFER | 4.000000 }" ];
-1888956208 -> 1888956144
-1888956144 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {VALUE_BUFFER }" ];
-1888956144 -> 1888956336
-1888956336 [shape=record, fillcolor=green rank = same style=filled label="    MOV  | {VALUE_BUFFER | 2.000000 }" ];
-1888956336 -> 1888956272
-1888956272 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {VALUE_BUFFER }" ];
-1888956272 -> 1888956400
-1888956400 [shape=record, fillcolor=green rank = same style=filled label="    RETURN " ];
-1888956400 -> 1888956464
-1888956464 [shape=record, fillcolor=green rank = same style=filled label="    FCOMPP " ];
-1888956464 -> 1888956528
-1888956528 [shape=record, fillcolor=green rank = same style=filled label="    FSTSW  | {AX }" ];
-1888956528 -> 1888956592
-1888956592 [shape=record, fillcolor=green rank = same style=filled label="    SAHF " ];
-1888956592 -> 1888956656
-1888956656 [shape=record, fillcolor=green rank = same style=filled label="    JE  | {label_0 }" ];
-1888956656 -> 1888956720
-1888956656 -> 1888953296
-1888956720 [shape=record, fillcolor=green rank = same style=filled label="    HLT " ];
-1888956720 -> 0
-label_0 -> 1888953296
-label_1 -> 1888953744
-label_2 -> 1888954704
-label_3 -> 1888955696
+-260271024 [shape=record, fillcolor=green rank = same style=filled label="    JMP  | {label_2 }" ];
+-260271024 -> -260270944
+-260271024 -> -260267840
+-260270944 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {RBX }" ];
+-260270944 -> -260270864
+-260270864 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {imm0 }" ];
+-260270864 -> -260270784
+-260270784 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {[RSP] }" ];
+-260270784 -> -260270704
+-260270704 [shape=record, fillcolor=green rank = same style=filled label="    ADD  | {RSP | 1 }" ];
+-260270704 -> -260270624
+-260270624 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {[RSP] }" ];
+-260270624 -> -260270544
+-260270544 [shape=record, fillcolor=green rank = same style=filled label="    ADD  | {RSP | 1 }" ];
+-260270544 -> -260270464
+-260270464 [shape=record, fillcolor=green rank = same style=filled label="    FCOMPP " ];
+-260270464 -> -260270384
+-260270384 [shape=record, fillcolor=green rank = same style=filled label="    FSTSW  | {AX }" ];
+-260270384 -> -260270304
+-260270304 [shape=record, fillcolor=green rank = same style=filled label="    SAHF " ];
+-260270304 -> -260270224
+-260270224 [shape=record, fillcolor=green rank = same style=filled label="    JE  | {label_1 }" ];
+-260270224 -> -260270144
+-260270224 -> -260267920
+-260270144 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {RBX }" ];
+-260270144 -> -260270064
+-260270064 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {RCX }" ];
+-260270064 -> -260269984
+-260269984 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {[RSP] }" ];
+-260269984 -> -260269904
+-260269904 [shape=record, fillcolor=green rank = same style=filled label="    ADD  | {RSP | 1 }" ];
+-260269904 -> -260269824
+-260269824 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {[RSP] }" ];
+-260269824 -> -260269744
+-260269744 [shape=record, fillcolor=green rank = same style=filled label="    ADD  | {RSP | 1 }" ];
+-260269744 -> -260269664
+-260269664 [shape=record, fillcolor=green rank = same style=filled label="    FMUL " ];
+-260269664 -> -260269584
+-260269584 [shape=record, fillcolor=green rank = same style=filled label="    SUB  | {RSP | 1 }" ];
+-260269584 -> -260269504
+-260269504 [shape=record, fillcolor=green rank = same style=filled label="    FST  | {[RSP] }" ];
+-260269504 -> -260268880
+-260268880 [shape=record, fillcolor=green rank = same style=filled label="    POP  | {RCX }" ];
+-260268880 -> -260268800
+-260268800 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {imm1 }" ];
+-260268800 -> -260268720
+-260268720 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {RBX }" ];
+-260268720 -> -260268640
+-260268640 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {[RSP] }" ];
+-260268640 -> -260268560
+-260268560 [shape=record, fillcolor=green rank = same style=filled label="    ADD  | {RSP | 1 }" ];
+-260268560 -> -260268480
+-260268480 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {[RSP] }" ];
+-260268480 -> -260268400
+-260268400 [shape=record, fillcolor=green rank = same style=filled label="    ADD  | {RSP | 1 }" ];
+-260268400 -> -260268320
+-260268320 [shape=record, fillcolor=green rank = same style=filled label="    FSUB " ];
+-260268320 -> -260268240
+-260268240 [shape=record, fillcolor=green rank = same style=filled label="    SUB  | {RSP | 1 }" ];
+-260268240 -> -260268160
+-260268160 [shape=record, fillcolor=green rank = same style=filled label="    FST  | {[RSP] }" ];
+-260268160 -> -260268080
+-260268080 [shape=record, fillcolor=green rank = same style=filled label="    POP  | {RBX }" ];
+-260268080 -> -260268000
+-260268000 [shape=record, fillcolor=green rank = same style=filled label="    CALL  | {label_0 }" ];
+-260268000 -> -260267920
+-260268000 -> -260270944
+-260267920 [shape=record, fillcolor=green rank = same style=filled label="    RETURN " ];
+-260267920 -> -260267840
+-260267840 [shape=record, fillcolor=green rank = same style=filled label="    IN " ];
+-260267840 -> -260267760
+-260267760 [shape=record, fillcolor=green rank = same style=filled label="    POP  | {RBX }" ];
+-260267760 -> -260267680
+-260267680 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {RBX }" ];
+-260267680 -> -260267600
+-260267600 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {imm2 }" ];
+-260267600 -> -260267520
+-260267520 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {[RSP] }" ];
+-260267520 -> -260267440
+-260267440 [shape=record, fillcolor=green rank = same style=filled label="    ADD  | {RSP | 1 }" ];
+-260267440 -> -260267360
+-260267360 [shape=record, fillcolor=green rank = same style=filled label="    FLD  | {[RSP] }" ];
+-260267360 -> -260267280
+-260267280 [shape=record, fillcolor=green rank = same style=filled label="    ADD  | {RSP | 1 }" ];
+-260267280 -> -260267200
+-260267200 [shape=record, fillcolor=green rank = same style=filled label="    FCOMPP " ];
+-260267200 -> -260267120
+-260267120 [shape=record, fillcolor=green rank = same style=filled label="    FSTSW  | {AX }" ];
+-260267120 -> -260267040
+-260267040 [shape=record, fillcolor=green rank = same style=filled label="    SAHF " ];
+-260267040 -> -260266960
+-260266960 [shape=record, fillcolor=green rank = same style=filled label="    JB  | {label_3 }" ];
+-260266960 -> -260266880
+-260266960 -> -260266400
+-260266880 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {imm3 }" ];
+-260266880 -> -260266800
+-260266800 [shape=record, fillcolor=green rank = same style=filled label="    POP  | {RCX }" ];
+-260266800 -> -260266720
+-260266720 [shape=record, fillcolor=green rank = same style=filled label="    CALL  | {label_0 }" ];
+-260266720 -> -260266640
+-260266720 -> -260270944
+-260266640 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {RCX }" ];
+-260266640 -> -260266560
+-260266560 [shape=record, fillcolor=green rank = same style=filled label="    OUT " ];
+-260266560 -> -260266480
+-260266480 [shape=record, fillcolor=green rank = same style=filled label="    HLT " ];
+-260266480 -> -260266400
+-260266400 [shape=record, fillcolor=green rank = same style=filled label="    PUSH  | {imm4 }" ];
+-260266400 -> -260266320
+-260266320 [shape=record, fillcolor=green rank = same style=filled label="    OUT " ];
+-260266320 -> -260266240
+-260266240 [shape=record, fillcolor=green rank = same style=filled label="    HLT " ];
+-260266240 -> 0
+label_0 -> -260270944
+label_1 -> -260267920
+label_2 -> -260267840
+label_3 -> -260266400
 }

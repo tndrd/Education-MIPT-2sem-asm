@@ -2,11 +2,21 @@
 
 void Translate(TokenList* tlist, char* buffer)
 {
-    
+
     char* cursor = buffer;
-    
+
+    PutHeader(tlist, &cursor);
+
     for (Token* current_token = tlist -> tail; current_token; current_token = current_token -> next)
     {
+        
+        if (current_token -> is_label)
+        {
+            size_t offset = 0;
+            sprintf(cursor, "\nlabel_%d:\n%n", current_token -> n_label, &offset);
+            cursor += offset;
+        }
+        
         TranslateOperation(current_token, &cursor);
         
         Operand* a = &(current_token -> a);
@@ -30,17 +40,63 @@ void Translate(TokenList* tlist, char* buffer)
 
 }
 
+void PutHeader(TokenList* tlist, char** cursor)
+{
+    assert(cursor);
+
+    long int offset = 0;
+    char*  header = ReadFile("src/nasm_header.txt", &offset);
+    
+    assert(header);
+
+    sprintf(*cursor, "%s%n", header, &offset);
+    *cursor += offset;
+
+    ShitImmsOut(tlist, cursor);
+
+    sprintf(*cursor, "section .bss\nsection .text\n\n_start:%n", &offset);
+    *cursor += offset;
+}
+
+void ShitImmsOut(TokenList* tlist, char** cursor)
+{
+    size_t offset = 0;
+    while ((tlist -> imms).size)
+    {
+        int imm_number = (tlist -> imms).size - 1;
+
+        sprintf(*cursor, "    imm%d dq %lf\n%n", imm_number, pop(&(tlist -> imms)), &offset);
+        (*cursor+=offset);
+    }
+
+    sprintf(*cursor, "\n");
+    (*cursor)++;
+}
+
 void TranslateOperand(Operand* operand, char** cursor)
 {
     assert(operand);
     assert(cursor);
 
+    size_t offset = 0;
+
     switch (operand -> type)
     {
         case OPERAND_EMPTY:                                              return;
         case r64:           TranslateRegister (operand -> reg,  cursor); return;
-        case imm64:         TranslateImmediate(operand -> cst,  cursor); return;
+        case imm64:         TranslateImmediate(operand -> imm,  cursor); return;
         case SPEC_NAME:     TranslateSpecial  (operand -> name, cursor); return;
+        
+        case TOKEN_REF:     sprintf(*cursor, "label_%d%n", operand -> label, &offset);
+                            (*cursor) += offset; return;
+        
+        case int64:         sprintf(*cursor, "%d%n", operand -> int64, &offset);
+                            (*cursor) += offset; return;          
+
+        case reg2mem64:     sprintf(*cursor, "qword ["); (*cursor)+=7;
+                            TranslateRegister(operand -> reg, cursor); 
+                            sprintf(*cursor,       "]"); (*cursor)++;
+                            return;
 
         default:            printf(RED_CLR "Unknown operand: " END_CLR);
                             printOperand(stdout, operand); printf("\n"); return;
@@ -73,13 +129,13 @@ void TranslateRegister(RegName reg, char** cursor)
     (*cursor) += offset;
 }
 
-void TranslateImmediate(double cst, char** cursor)
+void TranslateImmediate(unsigned int imm, char** cursor)
 {
     assert(cursor);
 
     size_t offset = 0;
 
-    sprintf(*cursor, "%lf%n", cst, &offset);
+    sprintf(*cursor, "qword [imm%d]%n", imm, &offset);
 
     (*cursor) += offset;
 }

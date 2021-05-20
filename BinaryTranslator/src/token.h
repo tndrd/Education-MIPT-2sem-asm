@@ -4,6 +4,8 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
+#include "assert.h"
+#include "config.h"
 
 enum Operation
 {
@@ -13,7 +15,9 @@ enum Operation
     PUSH,
     MOV,
     POP,
+    SUB,
     JUMP,
+    ADD,
     IN,
     OUT,
     HLT,
@@ -34,7 +38,8 @@ enum RegName
     RBX = 'a',
     RCX = 'b',
     RDX = 'c',
-    RSI = 'd'
+    RSI = 'd',
+    RSP = 3
 };
 
 enum ArithmeticOperation
@@ -43,7 +48,8 @@ enum ArithmeticOperation
     FSUB,
     FMUL,
     FDIV,
-    FCHS
+    FCHS,
+    FSQRT
 };
 
 enum JumpOperation
@@ -68,6 +74,8 @@ enum OperandType
     OPERAND_EMPTY = 0,
     SPEC_NAME,
     TOKEN_REF,
+    reg2mem64,
+    int64,
     r64,
     m64,
     imm64
@@ -95,7 +103,8 @@ struct Operand
 
     union
     {
-        double        cst = 0;   // for double constants
+        unsigned int  imm = 0;   // for double constants
+        u_int64_t     int64;
         u_int64_t     mem;       // for jmp offsets and memory adresses
         RegName       reg;       // for register operands
         SpecName      name; 
@@ -114,6 +123,16 @@ struct Token
 
     Token* next = nullptr;
     Token* prev = nullptr;
+
+    char is_label = 0;
+    unsigned char n_label = 0;
+};
+
+struct ImmediateStack
+{
+    double* buffer = nullptr;
+    size_t size = 0;
+    size_t capacity = 0;
 };
 
 Token* newToken(Operation op_type = OP_EMPTY, OperationName op_name = {NO_SUBNAME}, Token* next = nullptr, Token* prev = nullptr);
@@ -124,7 +143,7 @@ Token* assignOperands(Token* thou, Operand* a, Operand* b = nullptr);
 
 Operand* AssignRegOperand(Operand* operand, RegName reg_name);
 
-Operand* AssignCstOperand(Operand* operand, double val);
+Operand* AssignCstOperand(ImmediateStack* imms, Operand* operand, double val);
 
 Operand* AssignAdrOperand(Operand* operand, u_int64_t val);
 
@@ -137,4 +156,14 @@ Token* printToken(Token* token);
 Operand* printOperand(FILE* fp, Operand* operand);
 
 Operand* AssignLabelOperand(Operand* operand, unsigned char label);
+
+
+Operand* AssignRegToMemOperand(Operand* operand, RegName reg);
+Operand* AssignIntgOperand(Operand* operand, u_int64_t val);
+
+void resize(ImmediateStack* stack);
+size_t push(ImmediateStack* stack, double value);
+double pop(ImmediateStack* stack);
+void SetImmStack(ImmediateStack* stack);
+
 #endif

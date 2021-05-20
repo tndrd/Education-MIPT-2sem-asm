@@ -9,6 +9,9 @@ Token* newToken(Operation op_type, OperationName op_name, Token* next, Token* pr
     new_token -> op_name = op_name;
     new_token -> next    = next;
     new_token -> prev    = prev;
+
+    new_token -> is_label = 0;
+    new_token -> n_label  = 0;
     return new_token; 
 }
 
@@ -39,12 +42,12 @@ Operand* AssignRegOperand(Operand* operand, RegName reg_name)
 }
 
 
-Operand* AssignCstOperand(Operand* operand, double val)
+Operand* AssignCstOperand(ImmediateStack* imms, Operand* operand, double val)
 {
     if (!operand) return nullptr;
     
     operand -> type  = imm64;
-    operand -> cst   = val;
+    operand -> imm   = push(imms, val);
     return operand;
 }
 
@@ -55,6 +58,24 @@ Operand* AssignAdrOperand(Operand* operand, u_int64_t val)
     
     operand -> type = m64;
     operand -> mem  = val;
+    return operand;
+}
+
+Operand* AssignRegToMemOperand(Operand* operand, RegName reg)
+{
+    if (!operand) return nullptr;
+    
+    operand -> type = reg2mem64;
+    operand -> reg  = reg;
+    return operand;
+}
+
+Operand* AssignIntgOperand(Operand* operand, u_int64_t val)
+{
+    if (!operand) return nullptr;
+    
+    operand -> type  = int64;
+    operand -> int64 = val;
     return operand;
 }
 
@@ -114,9 +135,44 @@ Operand* printOperand(FILE* fp, Operand* operand)
         case SPEC_NAME    : fprintf(fp, "%s",  getEnum_SpecName(operand -> name)); break;
         case r64          : fprintf(fp, "%s",  getEnum_RegName(operand -> reg)); break;
         case m64          : fprintf(fp, "[%x]",  operand -> mem); break;
-        case imm64        : fprintf(fp, "%lf", operand -> cst); break;
+        case imm64        : fprintf(fp, "imm%d", operand -> imm); break;
+        case int64        : fprintf(fp, "%d", operand -> int64); break;
         case TOKEN_REF    : fprintf(fp, "label_%d", operand -> label); break;
+        case reg2mem64    : fprintf(fp, "[%s]",  getEnum_RegName(operand -> reg)); break;
     }
 
     return operand;
+}
+
+void resize(ImmediateStack* stack)
+{
+    assert(stack);
+    stack -> buffer = (double*)realloc(stack -> buffer, stack -> capacity * 2 * sizeof(double));
+    assert(stack -> buffer);
+}
+
+
+size_t push(ImmediateStack* stack, double value)
+{
+    assert(stack);
+    
+    if (stack -> size == stack -> capacity) resize(stack);
+
+    (stack -> buffer)[stack -> size ++] = value;
+
+    return stack -> size - 1;
+}
+
+double pop(ImmediateStack* stack)
+{
+    assert(stack -> size > 0);
+
+    return (stack -> buffer)[-- stack -> size];
+}
+
+void SetImmStack(ImmediateStack* stack)
+{
+    stack -> size     = 0;
+    stack -> capacity = IMM_STACK_INITIAL_CAPACITY;
+    stack -> buffer   = (double*)calloc(IMM_STACK_INITIAL_CAPACITY, sizeof(double));
 }

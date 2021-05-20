@@ -21,6 +21,8 @@ struct TokenList
 
     LabelList label_list = {};
 
+    ImmediateStack imms = {};
+
     size_t size = 0;    
 };
 

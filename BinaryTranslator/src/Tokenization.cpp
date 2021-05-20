@@ -16,6 +16,7 @@ TokenList* Tokenize(char* code, long int filesize)
 {
     TokenList* tlist = (TokenList*)calloc(1, sizeof(TokenList));
     SetLabelList(&(tlist -> label_list), code);
+    SetImmStack (&(tlist -> imms));
 
     size_t code_offset = GetCodeStartOffset(code);
     
@@ -25,7 +26,9 @@ TokenList* Tokenize(char* code, long int filesize)
 
     while (cursor - code < filesize)
     {   
+        
         Token* new_token  = nullptr;
+
         char*  old_cursor = cursor; 
 
         switch(*cursor & COMMAND_NUM_MASK)
@@ -35,11 +38,21 @@ TokenList* Tokenize(char* code, long int filesize)
             #include "commands/cpu_commands.h"
 
             #undef DEF_CMD
+
+            default: printf(RED_CLR "Unknown command code: %X\n" END_CLR, *cursor & COMMAND_NUM_MASK);
         }
 
         if (old_cursor - code_offset - code == (tlist -> label_list).in_labels[current_label_idx])
         {
+            new_token -> is_label = 1;
+            new_token -> n_label  = current_label_idx;
+
             (tlist -> label_list).labels[current_label_idx++] = new_token;            
+        }
+
+        if (old_cursor == cursor)
+        {
+            printf("Program stuck on rip %X.\n", cursor - code); abort();
         }
         
     }
@@ -64,13 +77,9 @@ Token* tokenizePUSH(TokenList* tlist, char** in_cursor)
     unsigned char       in_offset  = 1;
     
     Operand operand_1 = {};
-    Operand operand_2 = {};
 
-    Token* push_token = newToken(FLD);
-    AssignSpecOperand(&operand_1, VALUE_BUFFER);
-    assignOperands(push_token, &operand_1);
+    Token* push_token = newToken(PUSH);
 
-    Token* val_token  = newToken();
 
     if (RAM_BIT)
     {
@@ -81,35 +90,29 @@ Token* tokenizePUSH(TokenList* tlist, char** in_cursor)
     if (REG_BIT)
     {
        
-       RegName regname = (RegName)(*(current_command + in_offset));
-       
-       val_token -> op_type = MOV;
-       AssignSpecOperand(&operand_1, VALUE_BUFFER);
-       AssignRegOperand(&operand_2, regname);
-       assignOperands(val_token, &operand_1, &operand_2);
+        RegName regname = (RegName)(*(current_command + in_offset));
 
-       in_offset += REGTAG_SIZE;
+        AssignRegOperand(&operand_1, regname);
+
+        in_offset += REGTAG_SIZE;
+        *in_cursor  = *in_cursor  + in_offset;
+    
     }
 
     else if (CONST_BIT)
     {   
         double val = *((double*)(current_command + in_offset));
 
-        val_token -> op_type = MOV;
-       
-       AssignSpecOperand(&operand_1, VALUE_BUFFER);
-       AssignCstOperand(&operand_2, val);
-       assignOperands(val_token, &operand_1, &operand_2);
-
+        AssignCstOperand(&(tlist -> imms), &operand_1, val);
         in_offset  += CONST_SIZE;
+
+        *in_cursor  = *in_cursor  + in_offset;
     }
 
-    *in_cursor  = *in_cursor  + in_offset;
-
-    append(tlist, val_token);
+    assignOperands(push_token, &operand_1);
     append(tlist, push_token);
-    
-    return val_token;
+
+    return push_token;
 }
 
 Token* tokenizePOP(TokenList* tlist, char** in_cursor)
@@ -147,28 +150,18 @@ Token* tokenizePOP(TokenList* tlist, char** in_cursor)
         fflush(stdout);
         printf("EMPTY POP!\n"); exit(0);
     }
-
-    Token* pop_token = newToken(FST);
-    AssignSpecOperand(&operand_1, VALUE_BUFFER);
-    assignOperands(pop_token, &operand_1);
     
     RegName regname = (RegName)(*(current_command + in_offset));
-    
 
-    Token* val_token  = newToken();
-    
-    val_token -> op_type = MOV;
-    AssignSpecOperand(&operand_2, VALUE_BUFFER);
+    Token* pop_token = newToken(POP);
     AssignRegOperand(&operand_1, regname);
-    assignOperands(val_token, &operand_1, &operand_2);
+    assignOperands(pop_token, &operand_1);
 
     in_offset += REGTAG_SIZE;
-
 
     *in_cursor  = *in_cursor  + in_offset;
 
     append(tlist, pop_token);
-    append(tlist, val_token);
 
     return pop_token;
 }
@@ -177,9 +170,9 @@ Token* tokenizeIN(TokenList* tlist, char** in_cursor)
 {
     if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
 
+
     Token* new_token = newToken(IN);
     append(tlist, new_token);
-
 
     (*in_cursor)++;
     return new_token;
@@ -209,77 +202,96 @@ Token* tokenizeHLT(TokenList* tlist, char** in_cursor)
 }
 
 
-Token* tokenizeSUB(TokenList* tlist, char** in_cursor)
+
+#define TOKENIZE_ARITHMETIC_BINARY(NAME, OPER)                              \
+Token* tokenize ## NAME (TokenList* tlist, char** in_cursor)                \
+{                                                                           \
+    if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;            \
+                                                                            \
+    Token* root = tokenizePushStackToFPU(tlist);                            \
+    tokenizePushStackToFPU(tlist);                                          \
+                                                                            \
+    OperationName operation = {};                                           \
+    operation.    ari_op    = OPER;                                         \
+                                                                            \
+    Token* arith_token = newToken(ARITHMETIC, operation);                   \
+                                                                            \
+    append(tlist, arith_token);                                             \
+                                                                            \
+    tokenizePopFPUToStack(tlist);                                           \
+                                                                            \
+    (*in_cursor)++;                                                         \
+    return root;                                                            \
+}                                                                           \
+
+#define TOKENIZE_ARITHMETIC_UNARY(NAME, OPER)                               \
+Token* tokenize ## NAME (TokenList* tlist, char** in_cursor)                \
+{                                                                           \
+    if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;            \
+                                                                            \
+    Token* root = tokenizePushStackToFPU(tlist);                            \
+                                                                            \
+    OperationName operation = {};                                           \
+    operation.    ari_op    = OPER;                                         \
+                                                                            \
+    Token* arith_token = newToken(ARITHMETIC, operation);                   \
+                                                                            \
+    append(tlist, arith_token);                                             \
+                                                                            \
+    tokenizePopFPUToStack(tlist);                                           \
+                                                                            \
+    (*in_cursor)++;                                                         \
+    return root;                                                            \
+}                                                                           \
+
+Token* tokenizePushStackToFPU(TokenList* tlist)
 {
-    if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
+    Operand operand   = {};                                                 
+    Operand operand_2 = {};                                                 
+                                                                            
+    Token* fld_token_1 = newToken(FLD);                                     
+    AssignRegToMemOperand(&operand, RSP);                                   
+    assignOperands(fld_token_1, &operand);                                  
+                                                                            
+    Token* add_token_1 = newToken(ADD);                                     
+    AssignRegOperand (&operand, RSP);                                       
+    AssignIntgOperand(&operand_2, 1);                                       
+    assignOperands(add_token_1, &operand, &operand_2);                      
 
-    OperationName operation = {};
-    operation.    ari_op    = FSUB;
+    append(tlist, fld_token_1);                                             
+    append(tlist, add_token_1);                                      
 
-    Token* new_token = newToken(ARITHMETIC, operation);
-    append(tlist, new_token);
-
-    (*in_cursor)++;
-    return new_token;
+    return fld_token_1;                                             
 }
 
-
-Token* tokenizeADD(TokenList* tlist, char** in_cursor)
+Token* tokenizePopFPUToStack(TokenList* tlist)
 {
-    if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
+    Operand operand   = {};                                                 
+    Operand operand_2 = {};
+    
+    Token* sub_token = newToken(SUB);                                       
+                                                                            
+    AssignRegOperand (&operand, RSP);                                       
+    AssignIntgOperand(&operand_2, 1);                                       
+    assignOperands(sub_token, &operand, &operand_2);                        
+                                                                            
+    Token* push_token = newToken(FST);                                      
+    AssignRegToMemOperand(&operand, RSP);                                   
+    assignOperands(push_token, &operand);   
 
-    OperationName operation = {};
-    operation.    ari_op    = FADD;
+    append(tlist, sub_token);                                               
+    append(tlist, push_token);        
 
-    Token* new_token = newToken(ARITHMETIC, operation);
-    append(tlist, new_token);
-
-    (*in_cursor)++;
-    return new_token;
+    return sub_token;                                
 }
 
+TOKENIZE_ARITHMETIC_BINARY(ADD, FADD);
+TOKENIZE_ARITHMETIC_BINARY(MUL, FMUL);
+TOKENIZE_ARITHMETIC_BINARY(SUB, FSUB);
+TOKENIZE_ARITHMETIC_BINARY(DIV, FDIV);
 
-Token* tokenizeMUL(TokenList* tlist, char** in_cursor)
-{
-    if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
-
-    OperationName operation = {};
-    operation.    ari_op    = FMUL;
-
-    Token* new_token = newToken(ARITHMETIC, operation);
-    append(tlist, new_token);
-
-    (*in_cursor)++;
-    return new_token;
-}
-
-Token* tokenizeDIV(TokenList* tlist, char** in_cursor)
-{
-    if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
-
-    OperationName operation = {};
-    operation.    ari_op    = FDIV;
-
-    Token* new_token = newToken(ARITHMETIC, operation);
-    append(tlist, new_token);
-
-    (*in_cursor)++;
-    return new_token;
-}
-
-Token* tokenizeNEG(TokenList* tlist, char** in_cursor)
-{
-    if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
-
-    OperationName operation = {};
-    operation.    ari_op    = FCHS;
-
-    Token* new_token = newToken(ARITHMETIC, operation);
-    append(tlist, new_token);
-
-    (*in_cursor)++;
-    return new_token;
-}
+TOKENIZE_ARITHMETIC_UNARY(SQRT, FSQRT);
+TOKENIZE_ARITHMETIC_UNARY(NEG,  FCHS);
 
 Token* tokenizeJUMP(TokenList* tlist, char** in_cursor, JumpOperation jump_op)
 {
@@ -309,6 +321,9 @@ Token* tokenizeJMP(TokenList* tlist, char** in_cursor)
 
 Token* tokenizeCompare(TokenList* tlist)
 {
+    Token* root = tokenizePushStackToFPU(tlist);
+    tokenizePushStackToFPU(tlist);
+    
     Token* fcompp = newToken(FCOMPP);
     Token* fstsw = newToken(FSTSW);
     Operand dest = {};

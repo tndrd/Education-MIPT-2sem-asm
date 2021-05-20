@@ -12,6 +12,8 @@ const char* getEnum_Operation(Operation operation)
         ENUM_CASE(FLD);
         ENUM_CASE(FST);
         ENUM_CASE(IN);
+        ENUM_CASE(SUB);
+        ENUM_CASE(ADD);
         ENUM_CASE(OUT);
         ENUM_CASE(HLT);
         ENUM_CASE(POP);
@@ -52,6 +54,7 @@ const char* getEnum_RegName(RegName reg)
         ENUM_CASE(RCX);
         ENUM_CASE(RSI);
         ENUM_CASE(RDX);
+        ENUM_CASE(RSP);
         ENUM_CASE(AX);
         ENUM_CASE(REG_NONE);
         default: return RED_CLR "UNKNOWN" END_CLR;
@@ -70,6 +73,7 @@ const char* getEnum_ArithmeticOperation(ArithmeticOperation operation)
         ENUM_CASE(FMUL);
         ENUM_CASE(FDIV);
         ENUM_CASE(FCHS);
+        ENUM_CASE(FSQRT);
         default: return RED_CLR "UNKNOWN" END_CLR;
     }
      

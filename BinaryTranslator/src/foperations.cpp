@@ -17,7 +17,7 @@ char* ReadFile(const char* name, long int* filesize_ptr){
     char* buffer = nullptr;
 
     if (fp==nullptr){
-        printf("Error: unable to open file\n");
+        printf("Error: unable to open file \"%s\"\n", name);
         exit(1);
     }
 

@@ -29,5 +29,8 @@ int main()
     printf(H_BAR);
     printf("%s", out_buffer);
 
+    FILE* fp = fopen("result.asm", "w");
+    fprintf(fp, "%s", out_buffer);
+
     free(out_buffer);
 }
