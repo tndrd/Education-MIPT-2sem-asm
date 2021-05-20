@@ -5,7 +5,7 @@
 #include "token.h"
 #include "tokenlist.h"
 #include "tokenization.h"
-
+#include "translation.h"
 
 int main()
 {
@@ -20,11 +20,14 @@ int main()
 
     printTokens(token_list);
     drawTokens(token_list);
-    /*
-    AssignAdrOperand(&a, 0x532);
-    AssignCstOperand(&b, 239);
-    assignOperands(new_token, &a, &b);
 
-    printToken(new_token);
-    */
+    printf(H_BAR);
+
+    char* out_buffer = (char*)calloc(5096, sizeof(char));
+
+    Translate(token_list, out_buffer);
+    printf(H_BAR);
+    printf("%s", out_buffer);
+
+    free(out_buffer);
 }

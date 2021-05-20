@@ -50,6 +50,7 @@ const char* getEnum_RegName(RegName reg)
         ENUM_CASE(RAX);
         ENUM_CASE(RBX);
         ENUM_CASE(RCX);
+        ENUM_CASE(RSI);
         ENUM_CASE(RDX);
         ENUM_CASE(AX);
         ENUM_CASE(REG_NONE);
@@ -64,10 +65,11 @@ const char* getEnum_ArithmeticOperation(ArithmeticOperation operation)
 
     switch(operation)
     {
-        ENUM_CASE(ADD);
-        ENUM_CASE(SUB);
-        ENUM_CASE(MUL);
-        ENUM_CASE(DIV);
+        ENUM_CASE(FADD);
+        ENUM_CASE(FSUB);
+        ENUM_CASE(FMUL);
+        ENUM_CASE(FDIV);
+        ENUM_CASE(FCHS);
         default: return RED_CLR "UNKNOWN" END_CLR;
     }
      

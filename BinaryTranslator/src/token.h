@@ -29,19 +29,21 @@ enum Operation
 enum RegName
 {
     REG_NONE = 0,
-    RAX = 'a',
-    RBX = 'b',
-    RCX = 'c',
-    RDX = 'd',
-    AX  = 'A'
+    AX  = 1,
+    RAX = 2,
+    RBX = 'a',
+    RCX = 'b',
+    RDX = 'c',
+    RSI = 'd'
 };
 
 enum ArithmeticOperation
 {
-    ADD,
-    SUB,
-    MUL,
-    DIV
+    FADD,
+    FSUB,
+    FMUL,
+    FDIV,
+    FCHS
 };
 
 enum JumpOperation

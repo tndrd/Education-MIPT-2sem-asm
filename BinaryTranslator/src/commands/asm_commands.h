@@ -1,0 +1,37 @@
+
+OPERATION(FLD,        "fld"             )
+OPERATION(FST,        "fst"             )
+OPERATION(PUSH,       "push"            )
+OPERATION(MOV,        "mov"             )
+OPERATION(POP,        "pop"             )
+OPERATION(IN,         "call _stdlib_in_")
+OPERATION(OUT,        "call _stdlib_out")
+OPERATION(HLT,        "call _stdlib_hlt")
+OPERATION(FCOMPP,     "fcompp"          )
+OPERATION(FSTSW,      "fstsw"           )
+OPERATION(SAHF,       "sahf"            )
+OPERATION(RETURN,     "ret"             )
+
+
+ARITHMETIC_OP(FADD, "fadd")
+ARITHMETIC_OP(FSUB, "fsub")
+ARITHMETIC_OP(FMUL, "fmul")
+ARITHMETIC_OP(FDIV, "fdiv")
+ARITHMETIC_OP(FCHS, "fchs")
+
+
+REGISTER(AX,   1,  "ax" )
+REGISTER(RAX,  2,  "rax")
+REGISTER(RBX, 'a', "rbx")
+REGISTER(RCX, 'b', "rcx")
+REGISTER(RDX, 'c', "rdx")
+REGISTER(RSI, 'd', "rsi")
+
+JUMP_OP (JMP,  "jmp" )
+JUMP_OP (CALL, "call")
+JUMP_OP (JA,   "ja"  )
+JUMP_OP (JAE,  "jae" )
+JUMP_OP (JB,   "jb"  )
+JUMP_OP (JBE,  "jbe" )
+JUMP_OP (JE,   "je"  )
+JUMP_OP (JNE,  "jne" )

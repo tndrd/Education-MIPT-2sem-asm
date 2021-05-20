@@ -3,7 +3,7 @@
 enum CPU_OPERATIONS
 {
     #define DEF_CMD(name, code) CPU_ ## name = code,
-    #include "rules.h"
+    #include "commands/cpu_commands.h"
     #undef  DEF_CMD
 };
 
@@ -25,30 +25,16 @@ TokenList* Tokenize(char* code, long int filesize)
 
     while (cursor - code < filesize)
     {   
-
         Token* new_token  = nullptr;
         char*  old_cursor = cursor; 
 
         switch(*cursor & COMMAND_NUM_MASK)
         {
-            case CPU_PUSH:   new_token = tokenizePUSH    (tlist, &cursor); break;
-            case CPU_POP:    new_token = tokenizePOP     (tlist, &cursor); break;
-            case CPU_HLT:    new_token = tokenizeHLT     (tlist, &cursor); break;
-            case CPU_IN:     new_token = tokenizeIN      (tlist, &cursor); break;
-            case CPU_OUT:    new_token = tokenizeOUT     (tlist, &cursor); break;
-            case CPU_ADD:    new_token = tokenizeADD     (tlist, &cursor); break;
-            case CPU_MUL:    new_token = tokenizeMUL     (tlist, &cursor); break;
-            case CPU_SUB:    new_token = tokenizeSUB     (tlist, &cursor); break;
-            case CPU_DIV:    new_token = tokenizeDIV     (tlist, &cursor); break;
-            case CPU_JMP:    new_token = tokenizeJMP     (tlist, &cursor); break;
-            case CPU_JA:     new_token = tokenizeJA      (tlist, &cursor); break;
-            case CPU_JB:     new_token = tokenizeJB      (tlist, &cursor); break;
-            case CPU_JAE:    new_token = tokenizeJAE     (tlist, &cursor); break;
-            case CPU_JBE:    new_token = tokenizeJBE     (tlist, &cursor); break;
-            case CPU_JE:     new_token = tokenizeJE      (tlist, &cursor); break;
-            case CPU_JNE:    new_token = tokenizeJNE     (tlist, &cursor); break;
-            case CPU_CALL:   new_token = tokenizeCALL    (tlist, &cursor); break;
-            case CPU_RETURN: new_token = tokenizeRETURN  (tlist, &cursor); break;
+            #define DEF_CMD(NAME, CODE) case CPU_ ## NAME : new_token = tokenize ## NAME (tlist, &cursor); break;
+
+            #include "commands/cpu_commands.h"
+
+            #undef DEF_CMD
         }
 
         if (old_cursor - code_offset - code == (tlist -> label_list).in_labels[current_label_idx])
@@ -228,7 +214,7 @@ Token* tokenizeSUB(TokenList* tlist, char** in_cursor)
     if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
 
     OperationName operation = {};
-    operation.    ari_op    = SUB;
+    operation.    ari_op    = FSUB;
 
     Token* new_token = newToken(ARITHMETIC, operation);
     append(tlist, new_token);
@@ -243,7 +229,7 @@ Token* tokenizeADD(TokenList* tlist, char** in_cursor)
     if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
 
     OperationName operation = {};
-    operation.    ari_op    = ADD;
+    operation.    ari_op    = FADD;
 
     Token* new_token = newToken(ARITHMETIC, operation);
     append(tlist, new_token);
@@ -258,7 +244,7 @@ Token* tokenizeMUL(TokenList* tlist, char** in_cursor)
     if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
 
     OperationName operation = {};
-    operation.    ari_op    = MUL;
+    operation.    ari_op    = FMUL;
 
     Token* new_token = newToken(ARITHMETIC, operation);
     append(tlist, new_token);
@@ -272,7 +258,21 @@ Token* tokenizeDIV(TokenList* tlist, char** in_cursor)
     if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
 
     OperationName operation = {};
-    operation.    ari_op    = DIV;
+    operation.    ari_op    = FDIV;
+
+    Token* new_token = newToken(ARITHMETIC, operation);
+    append(tlist, new_token);
+
+    (*in_cursor)++;
+    return new_token;
+}
+
+Token* tokenizeNEG(TokenList* tlist, char** in_cursor)
+{
+    if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
+
+    OperationName operation = {};
+    operation.    ari_op    = FCHS;
 
     Token* new_token = newToken(ARITHMETIC, operation);
     append(tlist, new_token);
@@ -326,14 +326,12 @@ Token* tokenizeCompare(TokenList* tlist)
 
 Token* tokenizeCALL(TokenList* tlist, char** in_cursor)
 {
-    printf("here call!\n");
     return tokenizeJUMP(tlist, in_cursor, CALL);
 }
 
 Token* tokenizeRETURN(TokenList* tlist, char** in_cursor)
 {
     if (!tlist || !in_cursor || !(*(in_cursor))) return nullptr;
-    printf("here ret!\n");
     Token* new_token = newToken(RETURN);
     append(tlist, new_token);
 
