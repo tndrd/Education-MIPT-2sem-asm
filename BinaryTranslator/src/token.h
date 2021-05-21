@@ -35,10 +35,18 @@ enum RegName
     REG_NONE = 0,
     AX  = 1,
     RAX = 2,
-    RBX = 'a',
-    RCX = 'b',
-    RDX = 'c',
-    RSI = 'd',
+    
+    
+    RBX = 4,
+    RCX = 5,
+    RDX = 6,
+    RSI = 7,
+    
+    R10 = 'a',
+    R11 = 'b',
+    R12 = 'c',
+    R13 = 'd',
+    
     RSP = 3
 };
 

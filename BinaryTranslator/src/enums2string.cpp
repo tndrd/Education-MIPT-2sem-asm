@@ -54,6 +54,10 @@ const char* getEnum_RegName(RegName reg)
         ENUM_CASE(RCX);
         ENUM_CASE(RSI);
         ENUM_CASE(RDX);
+        ENUM_CASE(R10);
+        ENUM_CASE(R11);
+        ENUM_CASE(R12);
+        ENUM_CASE(R13);
         ENUM_CASE(RSP);
         ENUM_CASE(AX);
         ENUM_CASE(REG_NONE);

@@ -1,16 +1,13 @@
 bits 64
-
+ORG 0x400080
 global _stdlib_in_
 
 section .data
-
-	code_addr equ $
-
+	
 	val:      dq 0
 	newline   db 10
 	in_buffer dq 64 dup 0
 	in_char   db 0
-
 	return    dq 0
 
 section .bss
@@ -20,11 +17,20 @@ section .text
 
 _stdlib_in_:
 
+	
 	push rax
 	push rbx
 	push rcx
 	push rdx
 	push rsi
+	push rdi
+
+	push r10
+	push r11
+	push r12
+	push r13
+	push r14
+	push r15
 
 	call FillInBuffer
 
@@ -45,6 +51,14 @@ _stdlib_in_:
 
 	pop rdx
 
+	pop r15
+	pop r14
+	pop r13
+	pop r12
+	pop r11
+	pop r10
+
+	pop rdi
 	pop rsi
 	pop rdx
 	pop rcx

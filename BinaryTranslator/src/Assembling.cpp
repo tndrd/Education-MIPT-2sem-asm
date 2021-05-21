@@ -1,11 +1,11 @@
 #include "assembling.h"
 #include "commands/opcodes.h"
+#include "elf.h"
 
 size_t Assemble(TokenList* tlist, char* buffer)
 {
     tlist -> buffer = nullptr;
     char* cursor = buffer;
-
     WriteImms(tlist, &cursor);
 
     for (Token* current_token = tlist -> tail; current_token; current_token = current_token -> next)
@@ -44,7 +44,7 @@ size_t Assemble(TokenList* tlist, char* buffer)
 
 u_int32_t GetImmAddress(TokenList* tlist, size_t n_imm)
 {
-    return sizeof(OP_JMP) + sizeof(u_int32_t) - 4 + 8 * ((tlist -> imms).size - n_imm - 1);
+    return 0x400080 + sizeof(OP_JMP) + sizeof(u_int32_t) - 4 + 8 * ((tlist -> imms).size - n_imm - 1);
 }
 
 void assemblePUSH(TokenList* tlist, Token* token, char** cursor)
@@ -70,10 +70,10 @@ void assemblePUSH(TokenList* tlist, Token* token, char** cursor)
 
         case r64:   switch (operand.reg)
                     {
-                        case RBX: sprintf(*cursor, PUSH_RBX); (*cursor)++; break;
-                        case RCX: sprintf(*cursor, PUSH_RCX); (*cursor)++; break;
-                        case RDX: sprintf(*cursor, PUSH_RDX); (*cursor)++; break;
-                        case RSI: sprintf(*cursor, PUSH_RSI); (*cursor)++; break;
+                        case R10: sprintf(*cursor, PUSH_R10); (*cursor)+=2; break;
+                        case R11: sprintf(*cursor, PUSH_R11); (*cursor)+=2; break;
+                        case R12: sprintf(*cursor, PUSH_R12); (*cursor)+=2; break;
+                        case R13: sprintf(*cursor, PUSH_R13); (*cursor)+=2; break;
                         default:  printf(RED_CLR "PUSH error: %s is not suitable\n" END_CLR, getEnum_RegName(operand.reg));
                         break;
                     }   break;
@@ -96,10 +96,10 @@ void assemblePOP(TokenList* tlist, Token* token, char** cursor)
     {
         case r64:   switch(operand.reg)
                     {
-                        case RBX: sprintf(*cursor, POP_RBX); (*cursor++); break;
-                        case RCX: sprintf(*cursor, POP_RCX); (*cursor++); break;
-                        case RDX: sprintf(*cursor, POP_RDX); (*cursor++); break;
-                        case RSI: sprintf(*cursor, POP_RSI); (*cursor++); break;
+                        case R10: sprintf(*cursor, POP_R10); (*cursor)+=2; break;
+                        case R11: sprintf(*cursor, POP_R11); (*cursor)+=2; break;
+                        case R12: sprintf(*cursor, POP_R12); (*cursor)+=2; break;
+                        case R13: sprintf(*cursor, POP_R13); (*cursor)+=2; break;
                         default:  printf(RED_CLR "POP error: %s is not suitable\n" END_CLR, getEnum_RegName(operand.reg));
                         break;
                     }   break;
@@ -248,12 +248,15 @@ void PutHeader(TokenList* tlist, char** cursor)
 void WriteImms(TokenList* tlist, char** cursor)
 {
     char* old_cursor = *cursor;
-    
     assembleJMP(tlist, nullptr, cursor);
 
     u_int32_t* entry_offset = (u_int32_t*)(*cursor);
 
-    (*cursor) += sizeof(u_int32_t) + 3;
+    (*cursor) += sizeof(u_int32_t);
+
+    (*cursor)[0] = (*cursor)[1] = (*cursor)[2] = 0;
+
+    (*cursor) +=  + 3;
 
     int n_imm = (tlist -> imms).size - 1; 
 

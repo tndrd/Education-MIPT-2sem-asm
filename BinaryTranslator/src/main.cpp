@@ -8,6 +8,7 @@
 #include "translation.h"
 #include "assembling.h"
 #include "sys/mman.h"
+#include "elf.h"
 
 void Execute(char* code_buffer, const size_t len)
 {
@@ -22,6 +23,7 @@ int main()
 {
     runTests();
 
+    printf("%d\n", sizeof(ELFHeader) + sizeof(ProgramHeader));
 
     long  int filesize = 0;
     char* code = ReadFile("pushtest", &filesize);
@@ -33,7 +35,7 @@ int main()
 
     printf(H_BAR);
 
-    char* out_buffer = (char*)aligned_alloc(4096, 5096 * sizeof(char));
+    char* out_buffer = (char*)aligned_alloc(4096, 10000 * sizeof(char));
 
     Translate(token_list, out_buffer);
     printf(H_BAR);
@@ -45,7 +47,7 @@ int main()
     free(out_buffer);
     fclose(fp);
 
-    out_buffer = (char*)aligned_alloc(4096, 5096 * sizeof(char));
+    out_buffer = (char*)aligned_alloc(4096, 10000 * sizeof(char));
 
     size_t bin_size = 0;
 
@@ -58,6 +60,7 @@ int main()
     fp = fopen("binary", "w");
     fwrite(out_buffer, 1, bin_size, fp);
 
+    WriteElf("result", out_buffer, bin_size);
 
 
     free(out_buffer);
