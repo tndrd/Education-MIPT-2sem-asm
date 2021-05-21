@@ -1,15 +1,8 @@
 all:
-	cd src; g++ main.cpp Elf.cpp Assembling.cpp Token.cpp TokenList.cpp Tokenization.cpp Translation.cpp enums2string.cpp tests.cpp translator.cpp foperations.cpp -o ../translate;
+	cd src; g++ main.cpp Elf.cpp Assembling.cpp Token.cpp TokenList.cpp Tokenization.cpp Translation.cpp enums2string.cpp foperations.cpp -o ../translate;
 
 stdlib:
-	cd src; nasm -f elf64 stdlib/out.asm -o stdlib/out.o; nasm -f elf64 stdlib/in.asm -o stdlib/in.o; nasm -f elf64 stdlib/hlt.asm -o stdlib/hlt.o;
 	cd src; nasm -f bin stdlib/out.asm; nasm -f bin stdlib/in.asm; nasm -f bin stdlib/hlt.asm;
-	
-iotest:
-	cd src; nasm -f elf64 stdlib/iotest.asm -o stdlib/iotest.o; ld -o ../iotest stdlib/in.o stdlib/out.o stdlib/iotest.o stdlib/hlt.o;
-
-result:
-	nasm -f elf64 result.asm -o result.o; cd src; ld -o ../result stdlib/in.o stdlib/out.o ../result.o stdlib/hlt.o;
 
 clean:
-	rm -f iotest translate result
+	rm -f translate result

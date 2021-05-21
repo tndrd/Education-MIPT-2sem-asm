@@ -166,12 +166,6 @@ LabelList* SetLabelList(LabelList* label_list, char* code)
     {
         (label_list -> label_offsets)[n_label] = nullptr;
     }
-
-    PrintLabels(label_list);
-    SortLabels(label_list);
-    printf(H_BAR);
-    PrintLabels(label_list);
-    printf(H_BAR);
     
     return label_list;   
 }

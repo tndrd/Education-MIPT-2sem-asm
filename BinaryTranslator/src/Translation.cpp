@@ -65,7 +65,6 @@ void ShitImmsOut(TokenList* tlist, char** cursor)
     int n_imm = (tlist -> imms).size - 1;
     while (n_imm >= 0)
     {
-        printf("%d\n", n_imm);
         sprintf(*cursor, "    imm%d dq %lf\n%n", n_imm, ((tlist -> imms).buffer)[n_imm], &offset);
         n_imm--;
         (*cursor+=offset);

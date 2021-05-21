@@ -1,7 +1,6 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
-#include "tests.h"
 #include "token.h"
 #include "tokenlist.h"
 #include "tokenization.h"
@@ -19,27 +18,37 @@ void Execute(char* code_buffer, const size_t len)
     func();
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-    runTests();
 
-    printf("%d\n", sizeof(ELFHeader) + sizeof(ProgramHeader));
+    switch (argc)
+    {
+        case 1:  printf("Error: specify input CPU file\n"); exit(0);
+        default: printf("Error: too much arguments");       exit(0);
+        case 2:  break;
+    }
+
 
     long  int filesize = 0;
-    char* code = ReadFile("pushtest", &filesize);
+    char*     code = ReadFile(argv[1], &filesize);
     
+    if (!code)
+    {
+        printf("Error: failed to open file \"%s\"\n", argv[1]);
+    }
+    else
+    {
+        printf("Tokenizing \"%s\"...\n", argv[1]);
+    }
+
     TokenList* token_list = Tokenize(code, filesize);
 
-    printTokens(token_list);
-    drawTokens(token_list);
 
-    printf(H_BAR);
+    char* out_buffer = (char*)aligned_alloc(4096, MAX_FILE_SIZE * sizeof(char));
 
-    char* out_buffer = (char*)aligned_alloc(4096, 10000 * sizeof(char));
+    printf("Translating into nasm...\n");
 
     Translate(token_list, out_buffer);
-    printf(H_BAR);
-    printf("%s", out_buffer);
 
     FILE* fp = fopen("result.asm", "w");
     fprintf(fp, "%s", out_buffer);
@@ -47,22 +56,19 @@ int main()
     free(out_buffer);
     fclose(fp);
 
-    out_buffer = (char*)aligned_alloc(4096, 10000 * sizeof(char));
+    printf("Assembling...\n");
+
+    out_buffer = (char*)aligned_alloc(4096, MAX_FILE_SIZE * sizeof(char));
 
     size_t bin_size = 0;
 
     bin_size = Assemble(token_list, out_buffer);
     bin_size = Assemble(token_list, out_buffer);
-    printf(H_BAR);
-
-    //Execute(out_buffer, bin_size);
-
-    fp = fopen("binary", "w");
-    fwrite(out_buffer, 1, bin_size, fp);
 
     WriteElf("result", out_buffer, bin_size);
 
+    printf("Done! How to run: $ chmod +x result\n"
+           "                  $ ./result\n\n");
 
     free(out_buffer);
-    fclose(fp);
 }

@@ -37,11 +37,10 @@ struct ProgramHeader {
     const unsigned char      P_OFFSET [8]        = {0x00};
     const unsigned char      P_VADDR  [8]        = {0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00};
     const unsigned char      P_PADDR  [8]        = {0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00};
-    size_t          P_FILES;
-    size_t          P_MEMSZ;
+    size_t                   P_FILES;
+    size_t                   P_MEMSZ;
     const char unsigned      P_ALIGN  [8]        = {0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     const char unsigned      P_SPAC   [8]        = {0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x00};
-
 };
 
 void WriteElf(const char* filename, char* code_buffer, size_t filesize);

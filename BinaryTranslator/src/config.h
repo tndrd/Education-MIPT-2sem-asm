@@ -2,6 +2,8 @@
 #define __CONFIG__
 
 const size_t IMM_STACK_INITIAL_CAPACITY = 10;
+const size_t MAX_FILE_SIZE = 10000;
+
 
 const char RAM_BIT_MASK      = 0b10000000;
 const char REGISTER_BIT_MASK = 0b01000000;

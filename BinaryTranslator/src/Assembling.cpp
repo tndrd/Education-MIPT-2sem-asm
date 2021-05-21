@@ -34,8 +34,8 @@ size_t Assemble(TokenList* tlist, char* buffer)
             case ARITHMETIC: assembleARITHMETIC (tlist, current_token, &cursor); break;
             case JUMP:       assembleJUMP       (tlist, current_token, &cursor); break;
 
-            default:            printf(RED_CLR "Unknown operand: " END_CLR);
-                                printf("%s\n", GetOperationName(current_token -> op_type, current_token -> op_name)); break;       break;
+            default:    printf(RED_CLR "Unknown operand: " END_CLR);
+                        printf("%s\n", GetOperationName(current_token -> op_type, current_token -> op_name)); break;
         }
     }
 
@@ -225,25 +225,6 @@ void CalculateLabelOffset(char* label, char** cursor)
     memcpy(*cursor, &label_offset, sizeof(int32_t));
     (*cursor) += sizeof(int32_t);
 }
-/*
-void PutHeader(TokenList* tlist, char** cursor)
-{
-    assert(cursor);
-
-    long int offset = 0;
-    char*  header = ReadFile("src/nasm_header.txt", &offset);
-    
-    assert(header);
-
-    sprintf(*cursor, "%s%n", header, &offset);
-    *cursor += offset;
-
-    ShitImmsOut(tlist, cursor);
-
-    sprintf(*cursor, "section .bss\nsection .text\n\n_start:%n", &offset);
-    *cursor += offset;
-}
-*/
 
 void WriteImms(TokenList* tlist, char** cursor)
 {
