@@ -1,10 +1,17 @@
+bits 64
+
 global _stdlib_in_
 
 section .data
+
+	code_addr equ $
+
 	val:      dq 0
 	newline   db 10
 	in_buffer dq 64 dup 0
 	in_char   db 0
+
+	return    dq 0
 
 section .bss
 	res: resq 1
@@ -12,6 +19,12 @@ section .bss
 section .text
 
 _stdlib_in_:
+
+	push rax
+	push rbx
+	push rcx
+	push rdx
+	push rsi
 
 	call FillInBuffer
 
@@ -31,12 +44,24 @@ _stdlib_in_:
 	StartParsing: call ParseDouble
 
 	pop rdx
+
+	pop rsi
+	pop rdx
+	pop rcx
+	pop rbx
+	pop rax
+
+	pop qword [return]
+
+	sub rsp, 8
+	fstp qword [rsp]
+
 	cmp rdx, 1
 	jne Return
 
 	fchs
 
-    Return: ret
+    Return: jmp qword [return]
 
     EmptyInputHandler:
         pop rbx

@@ -1,3 +1,5 @@
+bits 64
+
 global _stdlib_out_
 
 section .data
@@ -30,12 +32,30 @@ section .text
 
 _stdlib_out_:
 
-    fst qword [val]
-    call PrintFloat64
+	pop rdx
+
+    pop qword [val]
+	fld qword [val]
+    
+	push rdx
+	
+	push rax
+	push rbx
+	push rcx
+	push rdx
+	push rsi
+
+	call PrintFloat64
 
     mov rsi, nln
     mov rdx, 1
     call PutToStdout
+
+	pop rsi
+	pop rdx
+	pop rcx
+	pop rbx
+	pop rax
 
     ret
 

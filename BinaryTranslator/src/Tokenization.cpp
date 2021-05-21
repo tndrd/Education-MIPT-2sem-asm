@@ -108,7 +108,7 @@ Token* tokenizePUSH(TokenList* tlist, char** in_cursor)
 
         *in_cursor  = *in_cursor  + in_offset;
     }
-
+    
     assignOperands(push_token, &operand_1);
     append(tlist, push_token);
 
@@ -255,7 +255,7 @@ Token* tokenizePushStackToFPU(TokenList* tlist)
                                                                             
     Token* add_token_1 = newToken(ADD);                                     
     AssignRegOperand (&operand, RSP);                                       
-    AssignIntgOperand(&operand_2, 1);                                       
+    AssignIntgOperand(&operand_2, 8);                                       
     assignOperands(add_token_1, &operand, &operand_2);                      
 
     append(tlist, fld_token_1);                                             
@@ -272,7 +272,7 @@ Token* tokenizePopFPUToStack(TokenList* tlist)
     Token* sub_token = newToken(SUB);                                       
                                                                             
     AssignRegOperand (&operand, RSP);                                       
-    AssignIntgOperand(&operand_2, 1);                                       
+    AssignIntgOperand(&operand_2, 8);                                       
     assignOperands(sub_token, &operand, &operand_2);                        
                                                                             
     Token* push_token = newToken(FST);                                      

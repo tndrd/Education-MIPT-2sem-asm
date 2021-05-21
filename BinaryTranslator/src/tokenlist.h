@@ -6,12 +6,24 @@
 #include "assert.h"
 #include "coloring.h"
 
+struct StdLib
+{
+    char* _out_offset_ = nullptr;
+    char* _in_offset_  = nullptr;
+    char* _hlt_offset_ = nullptr;
+};
+
+
 struct LabelList
 {
     unsigned char n_labels   = 0;
     char*   map              = nullptr;
     int*    in_labels        = nullptr;
     Token** labels           = nullptr;
+    char**  label_offsets = nullptr;
+    char*   entry = nullptr;
+
+    StdLib stdlib = {};
 };
 
 struct TokenList
@@ -23,6 +35,7 @@ struct TokenList
 
     ImmediateStack imms = {};
 
+    char*   buffer;
     size_t size = 0;    
 };
 

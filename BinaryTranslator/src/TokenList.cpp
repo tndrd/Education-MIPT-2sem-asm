@@ -147,12 +147,24 @@ LabelList* SetLabelList(LabelList* label_list, char* code)
     label_list -> n_labels  = n_labels;
     label_list -> in_labels = (int*)(code + HEADER_SIZE);
 
-    label_list -> map    = (char*) calloc(n_labels, sizeof(char));
-    label_list -> labels = (Token**)calloc(n_labels, sizeof(Token*));
+    label_list -> map           = (char*) calloc(n_labels, sizeof(char));
+    label_list -> labels        = (Token**)calloc(n_labels, sizeof(Token*));
+    label_list -> label_offsets = (char**)calloc(n_labels, sizeof(char*));
+
+    (label_list -> stdlib)._out_offset_ = nullptr;
+    (label_list -> stdlib)._in_offset_ = nullptr;
+    (label_list -> stdlib)._hlt_offset_ = nullptr;
+
+    label_list -> entry = nullptr;
 
     for (int n_label = 0; n_label < n_labels; n_label++)
     {
         (label_list -> map)[n_label] = n_label;
+    }
+
+    for (int n_label = 0; n_label < n_labels; n_label++)
+    {
+        (label_list -> label_offsets)[n_label] = nullptr;
     }
 
     PrintLabels(label_list);
@@ -191,7 +203,7 @@ void PrintLabels(LabelList* label_list)
 
     for (int n_label = 0; n_label < label_list -> n_labels; n_label++)
     {
-        printf("%d [%d]\n", label_list -> in_labels[n_label], label_list -> map[n_label]); 
+        printf("%d [%p]\n", label_list -> in_labels[n_label], label_list -> label_offsets[n_label]); 
     }
 }
 

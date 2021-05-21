@@ -1,3 +1,5 @@
+bits 64
+
 global _stdlib_hlt_
 
 section .data

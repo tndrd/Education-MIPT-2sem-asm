@@ -61,11 +61,13 @@ void PutHeader(TokenList* tlist, char** cursor)
 void ShitImmsOut(TokenList* tlist, char** cursor)
 {
     size_t offset = 0;
-    while ((tlist -> imms).size)
-    {
-        int imm_number = (tlist -> imms).size - 1;
 
-        sprintf(*cursor, "    imm%d dq %lf\n%n", imm_number, pop(&(tlist -> imms)), &offset);
+    int n_imm = (tlist -> imms).size - 1;
+    while (n_imm >= 0)
+    {
+        printf("%d\n", n_imm);
+        sprintf(*cursor, "    imm%d dq %lf\n%n", n_imm, ((tlist -> imms).buffer)[n_imm], &offset);
+        n_imm--;
         (*cursor+=offset);
     }
 
