@@ -2,7 +2,7 @@
 #define __TOKENIZATION__
 
 #include "tokenlist.h"
-#include "config.h"
+//#include "config.h"
 
 TokenList* Tokenize(char* code, long int filesize);
 

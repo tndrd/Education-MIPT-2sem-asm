@@ -20,13 +20,13 @@ void DeleteToken(Token* token)
     free(token);
 }
 
-Token* assignOperands(Token* thou, Operand* a, Operand* b)
+Token* assignOperands(Token* thou, Operand* operand_a, Operand* operand_b)
 {
-    if (!thou || !a) return nullptr;
+    if (!thou || !operand_a) return nullptr;
 
-    if (b)
-        thou -> b = *b;
-    thou -> a = *a;
+    if (operand_b)
+        thou -> operand_b = *operand_b;
+    thou -> operand_a = *operand_a;
     
 
     return thou;
@@ -111,11 +111,11 @@ Token* printToken(Token* token)
 
     printf("%s ", GetOperationName(token -> op_type, token -> op_name));
     
-    if ((token -> a).type) printOperand(stdout, &(token -> a));
-    if ((token -> b).type)
+    if ((token -> operand_a).type) printOperand(stdout, &(token -> operand_a));
+    if ((token -> operand_b).type)
     {
         printf(", ");
-        printOperand(stdout, &(token -> b));
+        printOperand(stdout, &(token -> operand_b));
     }
     
     printf("\n");

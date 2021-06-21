@@ -126,8 +126,8 @@ struct Token
 
     OperationName op_name;
 
-    Operand a = {};
-    Operand b = {};
+    Operand operand_a = {};
+    Operand operand_b = {};
 
     Token* next = nullptr;
     Token* prev = nullptr;
@@ -147,7 +147,7 @@ Token* newToken(Operation op_type = OP_EMPTY, OperationName op_name = {NO_SUBNAM
 
 void DeleteToken(Token* token);
 
-Token* assignOperands(Token* thou, Operand* a, Operand* b = nullptr);
+Token* assignOperands(Token* thou, Operand* operand_a, Operand* operand_b = nullptr);
 
 Operand* AssignRegOperand(Operand* operand, RegName reg_name);
 

@@ -19,18 +19,18 @@ void Translate(TokenList* tlist, char* buffer)
         
         TranslateOperation(current_token, &cursor);
         
-        Operand* a = &(current_token -> a);
-        Operand* b = &(current_token -> b);
+        Operand* operand_a = &(current_token -> operand_a);
+        Operand* operand_b = &(current_token -> operand_b);
 
-        if (a -> type)
+        if (operand_a -> type)
         {
             sprintf(cursor, " "); cursor+=1;
-            TranslateOperand(a, &cursor);
+            TranslateOperand(operand_a, &cursor);
 
-            if (b -> type)
+            if (operand_b -> type)
             {
                 sprintf(cursor, ", "); cursor+=2;
-                TranslateOperand(b, &cursor);
+                TranslateOperand(operand_b, &cursor);
             }
 
         }

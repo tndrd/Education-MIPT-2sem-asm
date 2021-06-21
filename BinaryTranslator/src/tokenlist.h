@@ -2,7 +2,7 @@
 #define __TOKENLIST__
 
 #include "token.h"
-#include "config.h"
+//#include "config.h"
 #include "assert.h"
 #include "coloring.h"
 

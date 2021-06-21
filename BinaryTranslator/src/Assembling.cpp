@@ -53,7 +53,7 @@ void assemblePUSH(TokenList* tlist, Token* token, char** cursor)
     assert(cursor);
     assert(token -> op_type == PUSH);
 
-    Operand operand = token -> a;
+    Operand operand = token -> operand_a;
 
     size_t offset = 0;
 
@@ -88,7 +88,7 @@ void assemblePOP(TokenList* tlist, Token* token, char** cursor)
     assert(cursor);
     assert(token -> op_type == POP);
 
-    Operand operand = token -> a;
+    Operand operand = token -> operand_a;
 
     size_t offset = 0;
 
@@ -193,7 +193,7 @@ void assembleJUMP(TokenList* tlist, Token* token, char** cursor)
     assert(token);                                                          
     assert(cursor);
     assert(token -> op_type  == JUMP);
-    assert((token -> a).type == TOKEN_REF);
+    assert((token -> operand_a).type == TOKEN_REF);
 
     switch ((token -> op_name).jmp_op)
     {
@@ -215,7 +215,7 @@ void assembleJUMP(TokenList* tlist, Token* token, char** cursor)
         default: printf(RED_CLR "%s jump is not supported\n" END_CLR, GetOperationName(token -> op_type, token -> op_name));
     }
 
-    CalculateLabelOffset((tlist -> label_list).label_offsets[(token -> a).label], cursor);
+    CalculateLabelOffset((tlist -> label_list).label_offsets[(token -> operand_a).label], cursor);
 
 }
 

@@ -4,11 +4,13 @@
 const size_t IMM_STACK_INITIAL_CAPACITY = 10;
 const size_t MAX_FILE_SIZE = 10000;
 
-
 const char RAM_BIT_MASK      = 0b10000000;
 const char REGISTER_BIT_MASK = 0b01000000;
 const char CONST_BIT_MASK    = 0b00100000;
 const char COMMAND_NUM_MASK  = 0b00011111;
+
+const char *const DEFAULT_ELF_NAME = "result";
+const char *const DEFAULT_ASM_NAME = "result.asm";
 
 const unsigned char OPCODE_SIZE = 1;
 const unsigned char REGTAG_SIZE = 1;

@@ -79,18 +79,18 @@ Token* drawToken(FILE* fp, TokenList* tlist, Token* token)
     const char* operation = GetOperationName(token -> op_type, token -> op_name);
     fprintf(fp, "%d [shape=record, fillcolor=green rank = same style=filled label=\"    %s ", token, operation);
     
-    OperandType a_op = token -> a.type;
-    OperandType b_op = token -> b.type;
+    OperandType a_op = token -> operand_a.type;
+    OperandType b_op = token -> operand_b.type;
     
     if (a_op)
     {
         fprintf (fp, " | {");
-        printOperand(fp, &(token -> a));
+        printOperand(fp, &(token -> operand_a));
 
         if (b_op)
         {
             fprintf(fp, " | ");
-            printOperand(fp, &(token -> b));
+            printOperand(fp, &(token -> operand_b));
         }
     
     fprintf(fp, " }");
@@ -101,7 +101,7 @@ Token* drawToken(FILE* fp, TokenList* tlist, Token* token)
     
     if (token -> op_type == JUMP)
     {
-        fprintf(fp, "%d -> %d\n", token, (tlist -> label_list).labels[(token -> a).label]);
+        fprintf(fp, "%d -> %d\n", token, (tlist -> label_list).labels[(token -> operand_a).label]);
     }
     
     return token;
