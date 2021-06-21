@@ -41,7 +41,7 @@ size_t Assemble(TokenList* tlist, char* buffer)
 
     return cursor - buffer;
 }
-
+// =====
 u_int32_t GetImmAddress(TokenList* tlist, size_t n_imm)
 {
     return 0x400080 + sizeof(OP_JMP) + sizeof(u_int32_t) - 4 + 8 * ((tlist -> imms).size - n_imm - 1);

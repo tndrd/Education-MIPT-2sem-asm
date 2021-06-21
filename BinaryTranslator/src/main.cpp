@@ -43,6 +43,7 @@ int main(int argc, char* argv[])
 
     TokenList* token_list = Tokenize(code, filesize);
 
+    drawTokens(token_list);
 
     char* out_buffer = (char*)aligned_alloc(4096, MAX_FILE_SIZE * sizeof(char));
 
